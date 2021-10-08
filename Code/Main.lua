@@ -1,11 +1,14 @@
+require("Libraries.Utils.Utils")
 require("Libraries.GUIController")
 require("Libraries.ScenesController")
+require("Libraries.CollisionsController")
 
 require("Scenes.MenuScene")
+require("Scenes.GameScene")
 
 function love.load()
     love.window.setMode(1600,900)
-    changeScene("menu")
+    changeScene("game")
 end
 
 function love.update(dt)
