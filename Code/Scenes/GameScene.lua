@@ -1,0 +1,1 @@
+local scene = newScene("game")
