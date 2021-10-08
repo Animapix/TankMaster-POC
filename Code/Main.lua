@@ -7,6 +7,8 @@ require("Libraries.SpritesController")
 require("Scenes.MenuScene")
 require("Scenes.GameScene")
 
+love.graphics.setDefaultFilter("nearest")
+
 function love.load()
     love.window.setMode(1600,900)
     changeScene("game")

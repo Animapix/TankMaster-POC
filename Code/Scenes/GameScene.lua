@@ -1,20 +1,33 @@
-local scene = newScene("game")
+require("Tank")
 
+local scene = newScene("game")
+local tank
 
 scene.load = function()
-    addNewSpritesLayer("Floor")
+    addNewSpritesLayer("floor")
+    addNewSpritesLayer("tank")
 
-    mainNode = newSprite(100, 100, love.graphics.newImage("Assets/PlaceHolders/Tank.png"), "Floor")
-    mainNode.addChild( newSpriteNode( 20,  20) )
-    mainNode.addChild( newSpriteNode(-20,  20) )
-    mainNode.addChild( newSpriteNode(-20, -20) )
-    mainNode.addChild( newSpriteNode( 20, -20) )
+    tank = newTank(200,200)
 end
 
 scene.update = function(dt)
-    mainNode.rotation = mainNode.rotation + dt
+    scene.updateTankControls(dt)
+    scene.updateTankAim()
     updateSprites(dt)
     updateCollisions(dt)
+end
+
+scene.updateTankAim = function()
+    local mousePosition =  newVector(love.graphics.inverseTransformPoint( love.mouse.getPosition()) )
+    tank.aim(mousePosition)
+end
+
+scene.updateTankControls = function(dt)
+    -- Tank controls
+    if love.keyboard.isDown("z") then tank.moveForward(dt) end
+    if love.keyboard.isDown("s") then tank.moveBackward(dt) end
+    if love.keyboard.isDown("d") then tank.turnRight(dt) end
+    if love.keyboard.isDown("q") then tank.turnLeft(dt) end
 end
 
 scene.draw = function()
