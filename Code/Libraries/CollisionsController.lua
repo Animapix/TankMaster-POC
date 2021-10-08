@@ -1,6 +1,15 @@
 local colliders = {}
 
 updateCollisions = function(dt)
+    for __,collider in ipairs(colliders) do
+        for __,other in ipairs(colliders) do
+            if collider ~= other and collider.collide ~= nil then
+                if collider.isCollideWith(other) then
+                    collider.collide(other)
+                end
+            end
+        end
+    end
 end
 
 drawColliders = function()
@@ -13,10 +22,13 @@ unloadColliders = function()
     colliders = {}
 end
 
-newCollider = function(pX, pY)
+newCollider = function(pX, pY, pTag)
     local collider = {}
 
+    collider.tag = pTag
     collider.position = newVector(pX,pY)
+
+    collider.collide = nil
 
     collider.draw = function()
         love.graphics.points(collider.position.x,collider.position.y)
@@ -27,8 +39,8 @@ newCollider = function(pX, pY)
 end
 
 
-newCircleCollider = function(pX, pY, pRadius)
-    local collider = newCollider(pX, pY)
+newCircleCollider = function(pX, pY, pRadius, pTag)
+    local collider = newCollider(pX, pY, pTag)
 
     collider.type = "circle"
     collider.radius = pRadius
@@ -52,8 +64,8 @@ newCircleCollider = function(pX, pY, pRadius)
     return collider
 end
 
-newRectangleCollider = function(pX, pY, pWidth, pHeight)
-    local collider = newCollider(pX, pY)
+newRectangleCollider = function(pX, pY, pWidth, pHeight, pTag)
+    local collider = newCollider(pX, pY, pTag)
 
     collider.type = "rectangle"
     collider.width = pWidth

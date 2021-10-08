@@ -1,6 +1,12 @@
 function newTank(pX,pY)
     local tank = newSpriteNode(pX, pY, "tank")
 
+    tank.collider = newCircleCollider(0,0,20)
+    tank.collider.collide = function(pOther)
+        print(pOther.tag)
+    end
+
+
     tank.chassis = newSprite(0,0,love.graphics.newImage("Assets/PlaceHolders/Tank.png"))
     tank.addChild(tank.chassis)
 

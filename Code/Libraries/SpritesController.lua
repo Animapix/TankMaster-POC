@@ -46,6 +46,7 @@ newSpriteNode = function(pX, pY, pLayer)
     node.childrens = {}
     node.parent = nil
     node.remove = false
+    node.collider = nil
 
     node.addChild = function(pChild)
         pChild.parent = node
@@ -55,6 +56,9 @@ newSpriteNode = function(pX, pY, pLayer)
     node.updatePosition = function(dt)
         node.position = node.position + node.velocity * dt
         node.rotation = node.rotation + node.rotationVelocity * dt
+        if node.collider ~= nil then
+            node.collider.position = node.position
+        end
     end
 
     node.update = function(dt)
