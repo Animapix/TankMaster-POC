@@ -45,4 +45,5 @@ newScene = function(pLabel)
     end
 
     scenes[pLabel] = scene
+    return scene
 end

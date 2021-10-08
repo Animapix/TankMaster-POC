@@ -1,4 +1,7 @@
+require("Libraries.GUIController")
 require("Libraries.ScenesController")
+
+require("Scenes.MenuScene")
 
 function love.load()
     love.window.setMode(1600,900)
@@ -10,6 +13,7 @@ function love.update(dt)
 end
 
 function love.draw()
+    love.graphics.scale(2,2)
     drawCurrentScene(dt)
 end
 
