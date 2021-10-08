@@ -2,6 +2,7 @@ require("Libraries.Utils.Utils")
 require("Libraries.GUIController")
 require("Libraries.ScenesController")
 require("Libraries.CollisionsController")
+require("Libraries.SpritesController")
 
 require("Scenes.MenuScene")
 require("Scenes.GameScene")
