@@ -23,8 +23,10 @@ function newTank(pX,pY,pBounds)
     tank.turret.barrelLeft = newSpriteNode(45,-10)
     tank.turret.addChild(tank.turret.barrelLeft)
 
-    tank.rifleRate = 0.1
+    tank.rifleRate = 0.15
     tank.rifleTimer = 0
+    tank.bulletRate = 1.0
+    tank.bulletTimer = 0
 
     tank.throttleCmd = 0
     tank.steeringCmd = 0
@@ -34,9 +36,14 @@ function newTank(pX,pY,pBounds)
 
     tank.update = function(dt)
 
+        -- shots timer update
         tank.rifleTimer = tank.rifleTimer - dt
         if tank.rifleTimer <= 0 then
             tank.rifleTimer = 0
+        end
+        tank.bulletTimer = tank.bulletTimer - dt
+        if tank.bulletTimer <= 0 then
+            tank.bulletTimer = 0
         end
 
         -- throtle friction compute
@@ -85,15 +92,18 @@ function newTank(pX,pY,pBounds)
     end
 
     tank.shot = function()
-        local direction = newVector(math.cos(tank.turret.getRelativeRotation()),math.sin(tank.turret.getRelativeRotation()))
-        local bullet = newExplosiveBullet(tank.turret.barrel.getRelativePosition(), direction, 800, tank.bounds)
+        if tank.bulletTimer == 0 then
+            local direction = newVector(math.cos(tank.turret.getRelativeRotation()),math.sin(tank.turret.getRelativeRotation()))
+            local bullet = newExplosiveBullet(tank.turret.barrel.getRelativePosition(), direction, 800, tank.bounds)
+            tank.bulletTimer = tank.bulletRate
+        end
     end
 
     tank.secondaryShot = function()
         if tank.rifleTimer == 0 then
             local direction = newVector(math.cos(tank.turret.getRelativeRotation()),math.sin(tank.turret.getRelativeRotation()))
-            local bulletLeft = newRifleBullet(tank.turret.barrelLeft.getRelativePosition(), direction, 800, tank.bounds)
-            local bulletRight = newRifleBullet(tank.turret.barrelRight.getRelativePosition(), direction, 800, tank.bounds)
+            local bulletLeft = newRifleBullet(tank.turret.barrelLeft.getRelativePosition(), direction, 1500, tank.bounds)
+            local bulletRight = newRifleBullet(tank.turret.barrelRight.getRelativePosition(), direction, 1500, tank.bounds)
             tank.rifleTimer = tank.rifleRate
         end
     end
