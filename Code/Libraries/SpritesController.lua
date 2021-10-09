@@ -1,4 +1,5 @@
 local layers = {}
+local spritesCounter = 0
 
 addNewSpritesLayer = function(pName, pModulate, pBlend)
     table.insert(layers, {
@@ -10,20 +11,20 @@ addNewSpritesLayer = function(pName, pModulate, pBlend)
 end
 
 updateSprites = function(dt)
-    local count = 0
+    spritesCounter = 0
     for __,layer in ipairs(layers) do
         for __,sprite in ipairs(layer.sprites) do
-            count = count + 1
+            spritesCounter = spritesCounter + 1
             sprite.update(dt)
         end
 
         for i = #layer.sprites, 1, -1 do
             if layer.sprites[i].remove then
                 table.remove(layer.sprites,i)
+                spritesCounter = spritesCounter - 1
             end
         end
     end
-    print(count)
 end
 
 drawSprites = function()

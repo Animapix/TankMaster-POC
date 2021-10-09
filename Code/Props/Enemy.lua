@@ -1,0 +1,59 @@
+function newEnemy(pX,pY,pTarget, pBounds)
+    local enemy = newSpriteNode(pX, pY, "enemies")
+    enemy.collider = newCircleCollider(pX,pY,10,"enemy",enemy)
+
+    enemy.target = pTarget
+    enemy.life = 100
+    enemy.speed = love.math.random(40,75)
+    enemy.seed = love.math.random(1,5000)
+    enemy.bounds = pBounds
+
+    enemy.update = function(dt)
+        if enemy.target ~= nil then
+            enemy.seed = enemy.seed + dt / 10
+            local noiseX = love.math.noise(enemy.position.x / 100 + enemy.seed) - 0.5
+            local noiseY = love.math.noise(enemy.position.y / 100 + enemy.seed) - 0.5
+            local noiseVector = newVector(noiseX,noiseY) * 100
+
+            local dir = enemy.position.dir(enemy.target.position)
+            enemy.velocity = dir * enemy.speed
+            enemy.velocity = enemy.velocity + noiseVector
+        end
+        enemy.isOutOfBounds(enemy.bounds)
+        enemy.updatePosition(dt)
+        enemy.updateChildrens(dt)
+    end
+
+    enemy.takeDamages = function(amount)
+        enemy.life = enemy.life - amount
+        if enemy.life <= 0 then
+            enemy.remove = true
+            enemy.collider.remove = true
+        end
+        print("enemy take "..amount.." damages, enemy's life = "..enemy.life)
+    end
+
+    enemy.collider.collide = function(other)
+        if other.tag == "enemy" then
+            enemy.collider.resolveCollision(other)
+        end
+    end
+
+    enemy.isOutOfBounds = function(bounds)
+        if enemy.collider.position.x - enemy.collider.radius < bounds.x - bounds.width/2 then
+            enemy.collider.position.x = bounds.x - bounds.width/2 + enemy.collider.radius
+        elseif enemy.collider.position.x + enemy.collider.radius > bounds.width/2 + bounds.x then
+            enemy.collider.position.x = bounds.width/2 + bounds.x - enemy.collider.radius
+        end
+
+        if enemy.collider.position.y - enemy.collider.radius < bounds.y - bounds.height/2 then
+            enemy.collider.position.y = bounds.y - bounds.height/2 + enemy.collider.radius
+        elseif enemy.collider.position.y + enemy.collider.radius > bounds.height/2 + bounds.y then
+            enemy.collider.position.y = bounds.height/2 + bounds.y - enemy.collider.radius
+        end
+
+        enemy.position = enemy.collider.position
+    end
+
+    return enemy
+end

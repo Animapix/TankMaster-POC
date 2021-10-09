@@ -16,7 +16,6 @@ updateCollisions = function(dt)
             table.remove(colliders,i)
         end
     end
-    print(#colliders)
 end
 
 drawColliders = function()
@@ -29,12 +28,12 @@ unloadColliders = function()
     colliders = {}
 end
 
-newCollider = function(pX, pY, pTag)
+newCollider = function(pX, pY, pTag, pParent)
     local collider = {}
 
     collider.tag = pTag
     collider.position = newVector(pX,pY)
-
+    collider.parent = pParent
     collider.collide = nil
 
     collider.draw = function()
@@ -49,8 +48,8 @@ newCollider = function(pX, pY, pTag)
 end
 
 
-newCircleCollider = function(pX, pY, pRadius, pTag)
-    local collider = newCollider(pX, pY, pTag)
+newCircleCollider = function(pX, pY, pRadius, pTag, pParent)
+    local collider = newCollider(pX, pY, pTag, pParent)
 
     collider.type = "circle"
     collider.radius = pRadius
@@ -71,11 +70,22 @@ newCircleCollider = function(pX, pY, pRadius, pTag)
         return collider.position.distance(pOther.position) < collider.radius + pOther.radius
     end
 
+    collider.resolveCollision = function(pother)
+        local distanceX = collider.position.x - pother.position.x
+        local distanceY = collider.position.y - pother.position.y
+        local radiusSum = collider.radius + pother.radius
+        local length = math.sqrt(distanceX * distanceX + distanceY * distanceY) or 1
+        local unitX = distanceX / length
+        local unitY = distanceY / length
+        collider.position = newVector( pother.position.x + (radiusSum + 1) * unitX, pother.position.y + (radiusSum + 1) * unitY)
+        collider.parent.position = collider.position
+    end
+
     return collider
 end
 
-newRectangleCollider = function(pX, pY, pWidth, pHeight, pTag)
-    local collider = newCollider(pX, pY, pTag)
+newRectangleCollider = function(pX, pY, pWidth, pHeight, pTag, pParent)
+    local collider = newCollider(pX, pY, pTag, pParent)
 
     collider.type = "rectangle"
     collider.width = pWidth

@@ -1,9 +1,10 @@
 local explosiveBulletImage = love.graphics.newImage("Assets/PlaceHolders/Bullet.png")
 local rifleBulletImage = love.graphics.newImage("Assets/PlaceHolders/BulletRifle.png")
 
-function newBullet(pFirePosition, pDirection, pSpeed, pBounds, pImage)
+function newBullet(pFirePosition, pDirection, pSpeed, pBounds, pImage, pTargetTag)
     local bullet = newSprite(pFirePosition.x,pFirePosition.y,pImage, "bullets")
     
+    bullet.targetTag = pTargetTag
     bullet.tag = "bullet"
     bullet.bounds = pBounds
     bullet.speed = pSpeed
@@ -31,8 +32,8 @@ function newBullet(pFirePosition, pDirection, pSpeed, pBounds, pImage)
     return bullet
 end
 
-function newExplosiveBullet(pFirePosition, pDirection, pSpeed, pBounds)
-    local bullet = newBullet(pFirePosition, pDirection, pSpeed, pBounds, explosiveBulletImage)
+function newExplosiveBullet(pFirePosition, pDirection, pSpeed, pBounds, pTargetTag)
+    local bullet = newBullet(pFirePosition, pDirection, pSpeed, pBounds, explosiveBulletImage, pTargetTag)
 
     bullet.collider = newCircleCollider(0,0,3)
 
@@ -48,13 +49,21 @@ function newExplosiveBullet(pFirePosition, pDirection, pSpeed, pBounds)
         end
     end
 
+    bullet.collider.collide = function(other)
+        if other.tag == bullet.targetTag then
+            bullet.remove = true
+            bullet.collider.remove = true
+        end
+    end
+
     return bullet
 end
 
-function newRifleBullet(pFirePosition, pDirection, pSpeed, pBounds)
-    local bullet = newBullet(pFirePosition, pDirection, pSpeed, pBounds, rifleBulletImage)
+function newRifleBullet(pFirePosition, pDirection, pSpeed, pBounds, pTargetTag)
+    local bullet = newBullet(pFirePosition, pDirection, pSpeed, pBounds, rifleBulletImage, pTargetTag)
 
     bullet.collider = newCircleCollider(0,0,1)
+    bullet.damageAmount = 10
 
     bullet.update = function(dt)
        
@@ -64,6 +73,14 @@ function newRifleBullet(pFirePosition, pDirection, pSpeed, pBounds)
         if bullet.isOutOfBounds(bullet.bounds) then
             bullet.remove = true
             bullet.collider.remove = true
+        end
+    end
+
+    bullet.collider.collide = function(other)
+        if other.tag == bullet.targetTag then
+            bullet.remove = true
+            bullet.collider.remove = true
+            other.parent.takeDamages(bullet.damageAmount)
         end
     end
 
