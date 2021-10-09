@@ -19,8 +19,14 @@ scene.load = function()
         top = newRectangleCollider(bounds.x, bounds.y - bounds.height / 2 - 10, 100,20, "topDoor"),
         bottom = newRectangleCollider(bounds.x, bounds.y + bounds.height / 2 + 10, 100,20, "bottomDoor"),
     }
+    
+    newSprite(bounds.x,bounds.y,love.graphics.newImage("Assets/PlaceHolders/Floor.png"), "floor")
+    newSprite(bounds.x,bounds.y,love.graphics.newImage("Assets/PlaceHolders/Walls.png"), "walls")
+    newSprite(bounds.x,bounds.y,love.graphics.newImage("Assets/PlaceHolders/DoorsTop.png"), "walls")
+    newSprite(bounds.x,bounds.y,love.graphics.newImage("Assets/PlaceHolders/DoorsBottom.png"), "topWalls")
 
-    tank = newTank(200,200)
+
+    tank = newTank(bounds.x,bounds.y)
 
 end
 
