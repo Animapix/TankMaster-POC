@@ -1,6 +1,7 @@
-function newTank(pX,pY)
+function newTank(pX,pY,pBounds)
     local tank = newSpriteNode(pX, pY, "tank")
 
+    tank.bounds = pBounds
     tank.collider = newCircleCollider(0,0,20)
     tank.collider.collide = function(pOther)
         print(pOther.tag)
@@ -37,6 +38,8 @@ function newTank(pX,pY)
 
         tank.updatePosition(dt)
         tank.updateChildrens(dt)
+
+        tank.isOutOfBounds(tank.bounds)
     end
 
     tank.moveForward = function(dt)
@@ -62,6 +65,23 @@ function newTank(pX,pY)
     tank.aim = function(target)
         local angle = tank.position.angle(target)
         tank.turret.rotation = angle - tank.rotation
+    end
+
+    tank.isOutOfBounds = function(bounds)
+
+        if tank.collider.position.x - tank.collider.radius < bounds.x - bounds.width/2 then
+            tank.collider.position.x = bounds.x - bounds.width/2 + tank.collider.radius
+        elseif tank.collider.position.x + tank.collider.radius > bounds.width/2 + bounds.x then
+            tank.collider.position.x = bounds.width/2 + bounds.x - tank.collider.radius
+        end
+
+        if tank.collider.position.y - tank.collider.radius < bounds.y - bounds.height/2 then
+            tank.collider.position.y = bounds.y - bounds.height/2 + tank.collider.radius
+        elseif tank.collider.position.y + tank.collider.radius > bounds.height/2 + bounds.y then
+            tank.collider.position.y = bounds.height/2 + bounds.y - tank.collider.radius
+        end
+
+        tank.position = tank.collider.position
     end
 
     return tank
