@@ -10,6 +10,13 @@ updateCollisions = function(dt)
             end
         end
     end
+
+    for i = #colliders, 1, -1 do
+        if colliders[i].remove then
+            table.remove(colliders,i)
+        end
+    end
+    print(#colliders)
 end
 
 drawColliders = function()

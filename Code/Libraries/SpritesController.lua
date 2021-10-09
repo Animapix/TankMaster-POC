@@ -10,11 +10,20 @@ addNewSpritesLayer = function(pName, pModulate, pBlend)
 end
 
 updateSprites = function(dt)
+    local count = 0
     for __,layer in ipairs(layers) do
         for __,sprite in ipairs(layer.sprites) do
+            count = count + 1
             sprite.update(dt)
         end
+
+        for i = #layer.sprites, 1, -1 do
+            if layer.sprites[i].remove then
+                table.remove(layer.sprites,i)
+            end
+        end
     end
+    print(count)
 end
 
 drawSprites = function()
@@ -115,7 +124,6 @@ newSpriteNode = function(pX, pY, pLayer)
 
     local layer = getSpritesLayer(pLayer)
     if layer ~= nil then
-        print("insert", pLayer)
         table.insert(layer.sprites, node)
     end
 
