@@ -34,6 +34,9 @@ newCollider = function(pX, pY, pTag)
         love.graphics.points(collider.position.x,collider.position.y)
     end
 
+    collider.isCollideWith = function(pOther)
+    end
+
     table.insert(colliders,collider)
     return collider
 end
