@@ -1,8 +1,10 @@
 local layers = {}
 
-addNewSpritesLayer = function(pName)
+addNewSpritesLayer = function(pName, pModulate, pBlend)
     table.insert(layers, {
         name = pName,
+        modulate = pModulate or {1,1,1,1},
+        blend = pBlend or { "alpha", nil } ,
         sprites = {}
     })
 end
@@ -17,9 +19,13 @@ end
 
 drawSprites = function()
     for __,layer in ipairs(layers) do
+        love.graphics.setColor(layer.modulate)
+        love.graphics.setBlendMode(layer.blend[1], layer.blend[2])
         for __,sprite in ipairs(layer.sprites) do
             sprite.draw()
         end
+        love.graphics.setColor(1,1,1)
+        love.graphics.setBlendMode("alpha")
     end
 end
 
@@ -109,6 +115,7 @@ newSpriteNode = function(pX, pY, pLayer)
 
     local layer = getSpritesLayer(pLayer)
     if layer ~= nil then
+        print("insert", pLayer)
         table.insert(layer.sprites, node)
     end
 

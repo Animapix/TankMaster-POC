@@ -9,9 +9,11 @@ local doors
 scene.load = function()
     
     addNewSpritesLayer("floor")
+    addNewSpritesLayer("walls")
     addNewSpritesLayer("tank")
+    addNewSpritesLayer("topWalls")
 
-    bounds = { x = 400, y = 225 , width = 750, height = 400 }
+    bounds = { x = 390, y = 215 , width = 740 , height = 390 }
     
     local doors = {
         left = newRectangleCollider(bounds.x - bounds.width/2 - 10, bounds.y, 20, 100, "leftDoor"),
@@ -26,7 +28,7 @@ scene.load = function()
     newSprite(bounds.x,bounds.y,love.graphics.newImage("Assets/PlaceHolders/DoorsBottom.png"), "topWalls")
 
 
-    tank = newTank(bounds.x,bounds.y)
+    tank = newTank(bounds.x,bounds.y, bounds)
 
 end
 
@@ -54,8 +56,8 @@ scene.draw = function()
     drawSprites()
 
     love.graphics.setColor(0,1,0)
-    love.graphics.rectangle("line", bounds.x - bounds.width/2, bounds.y - bounds.height/2, bounds.width, bounds.height)
-    drawColliders()
+    --love.graphics.rectangle("line", bounds.x - bounds.width/2, bounds.y - bounds.height/2, bounds.width, bounds.height)
+    --drawColliders()
     love.graphics.setColor(1,1,1)
 end
 
