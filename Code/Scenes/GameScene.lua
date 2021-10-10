@@ -6,8 +6,10 @@ local tank
 
 local bounds
 local doors
-
 local sceneState = "start"
+
+local level = 1
+local waves = 5
 
 scene.load = function()
     
@@ -60,6 +62,13 @@ scene.update = function(dt)
             tank.secondaryShot()
         end
         scene.updateEnemiesSpawn(dt)
+
+        if waves <= 0 and #getSprites("enemy") == 0 then
+            sceneState = "end"
+            level = level + 1 
+            waves = 5
+        end
+        
     elseif sceneState == "end" then ---------------------- End of round ------------------------
 
         -- wait for tank go out to right door
@@ -102,14 +111,25 @@ end
 local spn = 1
 
 scene.updateEnemiesSpawn = function(dt)
+    if waves <= 0  then
+        return
+    end
     spn = spn - dt
     if spn > 0 then return end
-    spn = 20
+    spn = 5
 
-    scene.spawnEnemies(20, "top")
-    scene.spawnEnemies(10, "left")
-    scene.spawnEnemies(10, "right")
-    scene.spawnEnemies(20, "bottom")
+    local amountOfEnemies = level * 10
+
+    waves = waves - 1
+    
+    local spawnDoors = { "top", "left", "right", "bottom" }
+    local numberOfDoors = love.math.random(1,4)
+
+    for i = 1, numberOfDoors do
+        local randomDoor = love.math.random(1,#spawnDoors)
+        scene.spawnEnemies(amountOfEnemies/numberOfDoors, spawnDoors[randomDoor])
+        table.remove(spawnDoors,randomDoor)
+    end
     
 end
 

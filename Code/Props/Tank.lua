@@ -9,7 +9,7 @@ function newTank(pX,pY,pBounds)
     tank.canOutOfBounds = false
     tank.collideRightDoor = nil
     tank.collider.collide = function(pOther)
-        if pOther.tag == "door" and tank.collideRightDoor ~= nil and tank.position.x > tank.bounds.x then 
+        if pOther.tag == "door" and tank.collideRightDoor ~= nil and tank.position.x > tank.bounds.x  + 100 then 
             tank.collideRightDoor()
         end
     end
@@ -76,6 +76,7 @@ function newTank(pX,pY,pBounds)
         tank.steeringCmd = 0
         tank.velocity = newVector()
         tank.rotation = 0
+        tank.collideRightDoor = nil
     end
 
     tank.moveForward = function(dt)

@@ -2,6 +2,7 @@ function newEnemy(pX,pY,pTarget, pBounds)
     local enemy = newSprite(pX, pY,love.graphics.newImage("Assets/PlaceHolders/Drone.png"), "enemies")
     enemy.collider = newCircleCollider(pX,pY,8,"enemy",enemy)
 
+    enemy.tag = "enemy"
     enemy.target = pTarget
     enemy.life = 100
     enemy.speed = love.math.random(60,75)

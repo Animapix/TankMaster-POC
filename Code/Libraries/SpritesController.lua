@@ -52,6 +52,22 @@ getSpritesLayer = function(pName)
     return nil
 end
 
+getSprites = function(pTag)
+    local sprt = {}
+    for __,layer in ipairs(layers) do
+        for __,sprite in ipairs(layer.sprites) do
+            if pTag ~= nil and sprite.tag ~= nil then
+                if sprite.tag == pTag then
+                    table.insert(sprt,sprite)
+                end
+            elseif pTag == nil then
+                table.insert(sprt,sprite)
+            end
+        end 
+    end
+    return sprt
+end
+
 newSpriteNode = function(pX, pY, pLayer)
     local node = {}
 
