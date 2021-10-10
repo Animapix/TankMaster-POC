@@ -38,6 +38,9 @@ function newTank(pX,pY,pBounds)
     tank.life = 500
     tank.speed = 250
 
+    tank.invincibleTimer = 0
+    tank.invincibleDuration = 2
+
     tank.update = function(dt)
 
         -- shots timer update
@@ -64,6 +67,12 @@ function newTank(pX,pY,pBounds)
         tank.rotationVelocity = tank.steeringCmd * math.rad(180)
         local dir = newVector(math.cos(tank.rotation),math.sin(tank.rotation))
         tank.velocity = dir * tank.throttleCmd * tank.speed
+
+        -- update tank timers
+        tank.invincibleTimer = tank.invincibleTimer - dt
+        if tank.invincibleTimer <= 0 then 
+            tank.invincibleTimer = 0
+        end  
 
         tank.updatePosition(dt)
         tank.updateChildrens(dt)
@@ -102,6 +111,20 @@ function newTank(pX,pY,pBounds)
     tank.aim = function(target)
         local angle = tank.position.angle(target)
         tank.turret.rotation = angle - tank.rotation
+    end
+
+    tank.takeDamages = function(amount)
+
+        if tank.invincibleTimer > 0 then
+            return
+        end
+        tank.invincibleTimer = tank.invincibleDuration
+        
+        tank.life = tank.life - amount
+        if tank.life <= 0 then
+            print("tank is dead")
+        end
+        print("tank take "..amount.." damages, tank's life = "..tank.life)
     end
 
     tank.shot = function()
