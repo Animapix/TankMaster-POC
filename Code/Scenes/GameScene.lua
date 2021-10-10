@@ -29,6 +29,7 @@ scene.load = function()
     addNewSpritesLayer("tank")
     addNewSpritesLayer("enemies")
     addNewSpritesLayer("bullets")
+    addNewSpritesLayer("particles")
     addNewSpritesLayer("topWalls")
 
     bounds = { x = 400, y = 225 , width = 740 , height = 390 }

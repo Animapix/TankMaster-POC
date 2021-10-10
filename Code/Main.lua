@@ -6,6 +6,7 @@ require("Libraries.SpritesController")
 
 require("Scenes.MenuScene")
 require("Scenes.GameScene")
+require("Scenes.TestScene")
 
 love.graphics.setDefaultFilter("nearest")
 
