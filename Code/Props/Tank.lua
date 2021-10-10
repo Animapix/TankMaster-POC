@@ -23,10 +23,10 @@ function newTank(pX,pY,pBounds)
     tank.turret.barrel = newSpriteNode(32,0)
     tank.turret.barrel.visible  = false
     tank.turret.addChild(tank.turret.barrel)
-    tank.turret.barrelRight = newSpriteNode(45,10)
+    tank.turret.barrelRight = newSpriteNode(4,11)
     tank.turret.barrelRight.visible  = false
     tank.turret.addChild(tank.turret.barrelRight)
-    tank.turret.barrelLeft = newSpriteNode(45,-10)
+    tank.turret.barrelLeft = newSpriteNode(4,-11)
     tank.turret.barrelLeft.visible  = false
     tank.turret.addChild(tank.turret.barrelLeft)
 
@@ -141,8 +141,8 @@ function newTank(pX,pY,pBounds)
     tank.secondaryShot = function()
         if tank.rifleTimer == 0 then
             local direction = newVector(math.cos(tank.turret.getRelativeRotation()),math.sin(tank.turret.getRelativeRotation()))
-            local bulletLeft = newRifleBullet(tank.turret.barrelLeft.getRelativePosition(), direction, 1500, tank.bounds, "enemy")
-            local bulletRight = newRifleBullet(tank.turret.barrelRight.getRelativePosition(), direction, 1500, tank.bounds, "enemy")
+            local bulletLeft = newRifleBullet(tank.turret.barrelLeft.getRelativePosition(), direction, 1000, tank.bounds, "enemy")
+            local bulletRight = newRifleBullet(tank.turret.barrelRight.getRelativePosition(), direction, 1000, tank.bounds, "enemy")
             tank.rifleTimer = tank.rifleRate
         end
     end
