@@ -163,8 +163,8 @@ scene.draw = function()
     drawSprites()
 
     love.graphics.setColor(0,1,0)
-    love.graphics.rectangle("line", bounds.x - bounds.width/2, bounds.y - bounds.height/2, bounds.width, bounds.height)
-    drawColliders()
+    --love.graphics.rectangle("line", bounds.x - bounds.width/2, bounds.y - bounds.height/2, bounds.width, bounds.height)
+    --drawColliders()
     love.graphics.setColor(1,1,1)
 end
 

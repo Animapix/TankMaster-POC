@@ -63,7 +63,7 @@ function newRifleBullet(pFirePosition, pDirection, pSpeed, pBounds, pTargetTag)
     local bullet = newBullet(pFirePosition, pDirection, pSpeed, pBounds, rifleBulletImage, pTargetTag)
 
     bullet.collider = newCircleCollider(0,0,1)
-    bullet.damageAmount = 50
+    bullet.damageAmount = 35
 
     bullet.update = function(dt)
        

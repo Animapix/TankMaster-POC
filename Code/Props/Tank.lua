@@ -3,8 +3,9 @@ require("Props.Bullet")
 function newTank(pX,pY,pBounds)
     local tank = newSpriteNode(pX, pY, "tank")
 
+    tank.tag = "tank"
     tank.bounds = pBounds
-    tank.collider = newCircleCollider(0,0,20, tank)
+    tank.collider = newCircleCollider(0,0,20,"tank", tank)
     tank.canOutOfBounds = false
     tank.collideRightDoor = nil
     tank.collider.collide = function(pOther)
@@ -26,7 +27,7 @@ function newTank(pX,pY,pBounds)
     tank.turret.barrelLeft = newSpriteNode(45,-10)
     tank.turret.addChild(tank.turret.barrelLeft)
 
-    tank.rifleRate = 0.15
+    tank.rifleRate = 0.05
     tank.rifleTimer = 0
     tank.bulletRate = 1.0
     tank.bulletTimer = 0

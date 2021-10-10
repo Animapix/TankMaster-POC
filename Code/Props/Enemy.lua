@@ -42,7 +42,7 @@ function newEnemy(pX,pY,pTarget, pBounds)
     end
 
     enemy.collider.collide = function(other)
-        if other.tag == "enemy" then
+        if other.tag == "tank" then
             enemy.collider.resolveCollision(other)
         end
     end
