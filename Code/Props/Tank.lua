@@ -39,7 +39,7 @@ function newTank(pX,pY,pBounds)
     tank.speed = 250
 
     tank.invincibleTimer = 0
-    tank.invincibleDuration = 2
+    tank.invincibleDuration = 0.1
 
     tank.update = function(dt)
 
@@ -124,7 +124,7 @@ function newTank(pX,pY,pBounds)
         if tank.life <= 0 then
             print("tank is dead")
         end
-        print("tank take "..amount.." damages, tank's life = "..tank.life)
+        --print("tank take "..amount.." damages, tank's life = "..tank.life)
     end
 
     tank.shot = function()

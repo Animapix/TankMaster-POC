@@ -79,6 +79,7 @@ newSpriteNode = function(pX, pY, pLayer)
     node.parent = nil
     node.remove = false
     node.collider = nil
+    node.visible = true
 
     node.addChild = function(pChild)
         pChild.parent = node
@@ -105,6 +106,7 @@ newSpriteNode = function(pX, pY, pLayer)
     end
 
     node.draw = function()
+        if not node.visible then return end
         love.graphics.circle("fill", node.getRelativeX(), node.getRelativeY(), 1)
         node.drawChildrens()
     end
@@ -153,6 +155,7 @@ newSprite = function(pX, pY, pImage, pLayer)
     sprite.image = pImage
 
     sprite.draw = function()
+        if not sprite.visible then return end
         if sprite.image == nil then return end
         love.graphics.push()
         love.graphics.translate(sprite.getRelativeX(),sprite.getRelativeY())

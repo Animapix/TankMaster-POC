@@ -1,6 +1,8 @@
 require("Props.Tank")
 require("Props.Enemy")
 
+require("Props.HUD.LifeBar")
+
 local scene = newScene("game")
 local tank
 
@@ -10,6 +12,15 @@ local sceneState = "start"
 
 local level = 1
 local waves = 5
+local spawnTimer = 1
+
+-- Gui controls
+local lifeBar
+local enemiesCounterLabel
+local wavesCounterLabel
+local levelCounterLabel
+
+local outArrowSprite
 
 scene.load = function()
     
@@ -30,6 +41,8 @@ scene.load = function()
     }
     
     newSprite(bounds.x,bounds.y,love.graphics.newImage("Assets/PlaceHolders/Floor.png"), "floor")
+    outArrowSprite = newSprite(bounds.x + bounds.width / 2 - 40,bounds.y,love.graphics.newImage("Assets/Images/HUD/Arrow.png"), "floor")
+    outArrowSprite.visible = false
     newSprite(bounds.x,bounds.y,love.graphics.newImage("Assets/PlaceHolders/Walls.png"), "walls")
     newSprite(bounds.x,bounds.y,love.graphics.newImage("Assets/PlaceHolders/DoorsTop.png"), "walls")
     newSprite(bounds.x,bounds.y,love.graphics.newImage("Assets/PlaceHolders/DoorsBottom.png"), "topWalls")
@@ -39,6 +52,7 @@ scene.load = function()
     tank.canOutOfBounds = true
     sceneState = "start"
 
+    scene.setupHUD()
 end
 
 scene.update = function(dt)
@@ -65,16 +79,16 @@ scene.update = function(dt)
 
         if waves <= 0 and #getSprites("enemy") == 0 then
             sceneState = "end"
-            level = level + 1 
-            waves = 5
+            outArrowSprite.visible = true
         end
-        
+
     elseif sceneState == "end" then ---------------------- End of round ------------------------
 
         -- wait for tank go out to right door
         tank.collideRightDoor = function()
             sceneState = "goOut"
             tank.canOutOfBounds = true
+            outArrowSprite.visible = false
         end
         scene.updateTankControls(dt)
         scene.updateTankAim()
@@ -98,25 +112,35 @@ scene.update = function(dt)
         if tank.position.x > bounds.x + bounds.width / 2 + 50 then
             tank.reset(bounds.x - bounds.width/2 - 100,bounds.y)
             tank.canOutOfBounds = true
+            level = level + 1 
+            waves = 5
+            spawnTimer = 1
             sceneState = "start"
         end
 
     end
+
+
+    -- Update GUI
+    lifeBar.value = tank.life
+    enemiesCounterLabel.text = #getSprites("enemy")
+    wavesCounterLabel.text = waves
+    levelCounterLabel.text = level
     
     updateCollisions(dt)
     updateSprites(dt)
-
+    updateGUI(dt)
 end
 
-local spn = 1
+
 
 scene.updateEnemiesSpawn = function(dt)
     if waves <= 0  then
         return
     end
-    spn = spn - dt
-    if spn > 0 then return end
-    spn = 5
+    spawnTimer = spawnTimer - dt
+    if spawnTimer > 0 then return end
+    spawnTimer = 5
 
     local amountOfEnemies = level * 10
 
@@ -186,6 +210,8 @@ scene.draw = function()
     --love.graphics.rectangle("line", bounds.x - bounds.width/2, bounds.y - bounds.height/2, bounds.width, bounds.height)
     --drawColliders()
     love.graphics.setColor(1,1,1)
+    
+    drawGUI()
 end
 
 scene.mousePressed = function(pX,pY,pBtn)
@@ -199,4 +225,38 @@ end
 
 scene.unload = function()
     unloadColliders()
+end
+
+scene.setupHUD = function()
+    local font = love.graphics.newFont("Assets/Fonts/retro_computer_personal_use.ttf", 14)
+
+    local panel = newControl(0,0)
+
+    lifeBar = newLifeBar(0,0,300,20,500)
+    panel.addChild(lifeBar)
+
+    enemiesCounterLabel = newLabel(200,5,100,20,"0",font)
+    enemiesCounterLabel.color = { 1,1,1,0.7 }
+    panel.addChild(enemiesCounterLabel)
+
+    wavesCounterLabel = newLabel(550,5,100,20,"0",font)
+    wavesCounterLabel.color = { 1,1,1,0.7 }
+    panel.addChild(wavesCounterLabel)
+    
+    local wavesLabel = newLabel(500,5,100,20,"Waves",font)
+    wavesLabel.color = { 1,1,1,0.7 }
+    panel.addChild(wavesLabel)
+
+    levelCounterLabel = newLabel(700,5,100,20,level,font)
+    levelCounterLabel.color = { 1,1,1,0.7 }
+    panel.addChild(levelCounterLabel)
+
+    local levelLabel = newLabel(650,5,100,20,"Level",font)
+    levelLabel.color = { 1,1,1,0.7 }
+    panel.addChild(levelLabel)
+
+    panel.visible = true
+    addControl(panel)
+
+    return panel
 end
