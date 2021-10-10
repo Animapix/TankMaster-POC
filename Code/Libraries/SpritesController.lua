@@ -162,10 +162,10 @@ newSprite = function(pX, pY, pImage, pLayer)
     sprite.image = pImage
 
     sprite.draw = function()
-        if node.parent ~= nil then
-            love.graphics.setColor(1,1,1,node.parent.opacity)
+        if sprite.parent ~= nil then
+            love.graphics.setColor(1,1,1,sprite.parent.opacity)
         else
-            love.graphics.setColor(1,1,1,node.opacity)
+            love.graphics.setColor(1,1,1,sprite.opacity)
         end
         if not sprite.visible then return end
         if sprite.image == nil then return end
@@ -203,7 +203,7 @@ newParticlesEmitter = function(pX,pY,pImage,lifeTime, pLayer)
         
         for i= 1, emitter.particlesAmount * dt do
             local particle = newParticle(emitter.position.x,emitter.position.y,emitter.particleImage,emitter.layer)
-            local angle = love.math.random() * emitter.angle + emitter.rotation
+            local angle = love.math.random() * emitter.angle + emitter.rotation - emitter.angle / 2
             particle.velocity = newVector(math.cos(angle),math.sin(angle)) * randomFact(emitter.particleSpeed,emitter.particleSpeedRandomF)
             particle.life = randomFact(emitter.particleLifeTime, emitter.particleLifetimeRandomF)
             particle.size = randomFact(emitter.partickeSize, emitter.partickeSizeRandomF)

@@ -1,5 +1,6 @@
 local explosiveBulletImage = love.graphics.newImage("Assets/PlaceHolders/Bullet.png")
 local rifleBulletImage = love.graphics.newImage("Assets/PlaceHolders/BulletRifle.png")
+local sparkleImage = love.graphics.newImage("Assets/PlaceHolders/Sparkle.png")
 
 function newBullet(pFirePosition, pDirection, pSpeed, pBounds, pImage, pTargetTag)
     local bullet = newSprite(pFirePosition.x,pFirePosition.y,pImage, "bullets")
@@ -73,6 +74,7 @@ function newRifleBullet(pFirePosition, pDirection, pSpeed, pBounds, pTargetTag)
         if bullet.isOutOfBounds(bullet.bounds) then
             bullet.remove = true
             bullet.collider.remove = true
+            bullet.spawnSparkles()
         end
     end
 
@@ -81,7 +83,21 @@ function newRifleBullet(pFirePosition, pDirection, pSpeed, pBounds, pTargetTag)
             bullet.remove = true
             bullet.collider.remove = true
             other.parent.takeDamages(bullet.damageAmount)
+            bullet.spawnSparkles()
         end
+    end
+
+    bullet.spawnSparkles = function()
+        local emitter = newParticlesEmitter(bullet.position.x,bullet.position.y,sparkleImage, 0.01 ,"particles")
+        emitter.particlesAmount = 300
+        emitter.particleLifeTime = 0.1
+        emitter.particleLifetimeRandomF = 0.5
+        emitter.particleSpeed = 500
+        emitter.particleSpeedRandomF = 0.8
+        emitter.partickeSize = 1
+        emitter.partickeSizeRandomF = 0.2
+        emitter.angle = math.pi / 5 
+        emitter.rotation = bullet.rotation - math.pi
     end
 
     return bullet
