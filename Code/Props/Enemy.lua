@@ -1,25 +1,33 @@
 function newEnemy(pX,pY,pTarget, pBounds)
     local enemy = newSpriteNode(pX, pY, "enemies")
-    enemy.collider = newCircleCollider(pX,pY,10,"enemy",enemy)
+    enemy.collider = newCircleCollider(pX,pY,8,"enemy",enemy)
 
     enemy.target = pTarget
     enemy.life = 100
-    enemy.speed = love.math.random(40,75)
+    enemy.speed = love.math.random(60,75)
     enemy.seed = love.math.random(1,5000)
     enemy.bounds = pBounds
+    enemy.state = "spawn"
 
     enemy.update = function(dt)
-        if enemy.target ~= nil then
-            enemy.seed = enemy.seed + dt / 10
-            local noiseX = love.math.noise(enemy.position.x / 100 + enemy.seed) - 0.5
-            local noiseY = love.math.noise(enemy.position.y / 100 + enemy.seed) - 0.5
-            local noiseVector = newVector(noiseX,noiseY) * 100
+        if enemy.state == "spawn" then
+            if enemy.isInBounds(enemy.bounds) then
+                enemy.state = "attack"
+            end
+        elseif enemy.state == "attack" then
+            if enemy.target ~= nil then
+                enemy.seed = enemy.seed + dt / 10
+                local noiseX = love.math.noise(enemy.position.x / 100 + enemy.seed) - 0.5
+                local noiseY = love.math.noise(enemy.position.y / 100 + enemy.seed) - 0.5
+                local noiseVector = newVector(noiseX,noiseY) * 100
 
-            local dir = enemy.position.dir(enemy.target.position)
-            enemy.velocity = dir * enemy.speed
-            enemy.velocity = enemy.velocity + noiseVector
+                local dir = enemy.position.dir(enemy.target.position)
+                enemy.velocity = dir * enemy.speed
+                enemy.velocity = enemy.velocity + noiseVector
+            end
+            enemy.isOutOfBounds(enemy.bounds)
         end
-        enemy.isOutOfBounds(enemy.bounds)
+        
         enemy.updatePosition(dt)
         enemy.updateChildrens(dt)
     end
@@ -35,7 +43,7 @@ function newEnemy(pX,pY,pTarget, pBounds)
 
     enemy.collider.collide = function(other)
         if other.tag == "enemy" then
-            enemy.collider.resolveCollision(other)
+            --enemy.collider.resolveCollision(other)
         end
     end
 
@@ -53,6 +61,13 @@ function newEnemy(pX,pY,pTarget, pBounds)
         end
 
         enemy.position = enemy.collider.position
+    end
+
+    enemy.isInBounds = function(bounds)
+        return enemy.position.x - enemy.collider.radius > bounds.x - bounds.width/2 and
+            enemy.position.y - enemy.collider.radius > bounds.y - bounds.height/2 and
+            enemy.position.x + enemy.collider.radius < bounds.x + bounds.width/2 and
+            enemy.position.y + enemy.collider.radius < bounds.y + bounds.height/2
     end
 
     return enemy

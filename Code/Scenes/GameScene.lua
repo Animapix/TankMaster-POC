@@ -21,10 +21,10 @@ scene.load = function()
     bounds = { x = 400, y = 225 , width = 740 , height = 390 }
     
     local doors = {
-        left = newRectangleCollider(bounds.x - bounds.width/2 - 10, bounds.y, 20, 100, "leftDoor"),
-        right = newRectangleCollider(bounds.x + bounds.width/2 + 10, bounds.y, 20, 100, "rightDoor"),
-        top = newRectangleCollider(bounds.x, bounds.y - bounds.height / 2 - 10, 100,20, "topDoor"),
-        bottom = newRectangleCollider(bounds.x, bounds.y + bounds.height / 2 + 10, 100,20, "bottomDoor"),
+        left = newRectangleCollider(bounds.x - bounds.width/2 - 10, bounds.y, 20, 100, "door"),
+        right = newRectangleCollider(bounds.x + bounds.width/2 + 10, bounds.y, 20, 100, "door"),
+        top = newRectangleCollider(bounds.x, bounds.y - bounds.height / 2 - 10, 100,20, "door"),
+        bottom = newRectangleCollider(bounds.x, bounds.y + bounds.height / 2 + 10, 100,20, "door"),
     }
     
     newSprite(bounds.x,bounds.y,love.graphics.newImage("Assets/PlaceHolders/Floor.png"), "floor")
@@ -59,7 +59,7 @@ scene.update = function(dt)
         if love.mouse.isDown(2) then
             tank.secondaryShot()
         end
-
+        scene.updateEnemiesSpawn(dt)
     elseif sceneState == "end" then ---------------------- End of round ------------------------
 
         -- wait for tank go out to right door
@@ -99,6 +99,53 @@ scene.update = function(dt)
 
 end
 
+local spn = 1
+
+scene.updateEnemiesSpawn = function(dt)
+    spn = spn - dt
+    if spn > 0 then return end
+    spn = 20
+
+    scene.spawnEnemies(20, "top")
+    scene.spawnEnemies(10, "left")
+    scene.spawnEnemies(10, "right")
+    scene.spawnEnemies(20, "bottom")
+    
+end
+
+scene.spawnEnemies = function(pQuantity, pSide)
+    
+    if pSide == "left" then
+        for i=0, pQuantity do
+            local x = math.floor(i / 4) * -20 + bounds.x - bounds.width/2 - 50 + love.math.random(-5,5)
+            local y = i%4 * -20 + bounds.y + 30    + love.math.random(-5,5)
+            local enemy = newEnemy(x,y,tank,bounds)
+            enemy.velocity = newVector(enemy.speed,0)
+        end
+    elseif pSide == "right" then
+        for i=0, pQuantity do
+            local x = math.floor(i / 4) * 20 + bounds.x + bounds.width/2 + 50 + love.math.random(-5,5)
+            local y = i%4 * -20 + bounds.y + 30    + love.math.random(-5,5)
+            local enemy = newEnemy(x,y,tank,bounds)
+            enemy.velocity = newVector(-enemy.speed,0)
+        end
+    elseif pSide == "top" then
+        for i=0, pQuantity do
+            local x = i%4 * -20 + bounds.x + 30 + love.math.random(-5,5)
+            local y = math.floor(i / 4) * -20 + bounds.y - bounds.height/2 - 50 + love.math.random(-5,5)
+            local enemy = newEnemy(x,y,tank,bounds)
+            enemy.velocity = newVector(0,enemy.speed)
+        end
+    elseif pSide == "bottom" then
+        for i=0, pQuantity do
+            local x = i%4 * -20 + bounds.x + 30    --+ love.math.random(-5,5)
+            local y = math.floor(i / 4) * 20 + bounds.y + bounds.height/2 + 50 --+ love.math.random(-5,5)
+            local enemy = newEnemy(x,y,tank,bounds)
+            enemy.velocity = newVector(0,-enemy.speed)
+        end
+    end
+end
+
 scene.updateTankAim = function()
     local mousePosition =  newVector(love.graphics.inverseTransformPoint( love.mouse.getPosition()) )
     tank.aim(mousePosition)
@@ -116,8 +163,8 @@ scene.draw = function()
     drawSprites()
 
     love.graphics.setColor(0,1,0)
-    --love.graphics.rectangle("line", bounds.x - bounds.width/2, bounds.y - bounds.height/2, bounds.width, bounds.height)
-    --drawColliders()
+    love.graphics.rectangle("line", bounds.x - bounds.width/2, bounds.y - bounds.height/2, bounds.width, bounds.height)
+    drawColliders()
     love.graphics.setColor(1,1,1)
 end
 

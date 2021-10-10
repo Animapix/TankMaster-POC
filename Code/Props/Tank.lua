@@ -8,7 +8,7 @@ function newTank(pX,pY,pBounds)
     tank.canOutOfBounds = false
     tank.collideRightDoor = nil
     tank.collider.collide = function(pOther)
-        if pOther.tag == "rightDoor" and tank.collideRightDoor ~= nil then 
+        if pOther.tag == "door" and tank.collideRightDoor ~= nil and tank.position.x > tank.bounds.x then 
             tank.collideRightDoor()
         end
     end
@@ -132,7 +132,6 @@ function newTank(pX,pY,pBounds)
         elseif tank.collider.position.y + tank.collider.radius > bounds.height/2 + bounds.y then
             tank.collider.position.y = bounds.height/2 + bounds.y - tank.collider.radius
         end
-
         tank.position = tank.collider.position
     end
 
