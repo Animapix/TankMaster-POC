@@ -79,6 +79,7 @@ newSpriteNode = function(pX, pY, pLayer)
     node.parent = nil
     node.remove = false
     node.collider = nil
+    node.opacity = 1
     node.visible = true
 
     node.addChild = function(pChild)
@@ -106,8 +107,14 @@ newSpriteNode = function(pX, pY, pLayer)
     end
 
     node.draw = function()
+        if node.parent ~= nil then
+            love.graphics.setColor(1,1,1,node.parent.opacity)
+        else
+            love.graphics.setColor(1,1,1,node.opacity)
+        end
         if not node.visible then return end
         love.graphics.circle("fill", node.getRelativeX(), node.getRelativeY(), 1)
+        love.graphics.setColor(1,1,1,1)
         node.drawChildrens()
     end
 
@@ -155,6 +162,11 @@ newSprite = function(pX, pY, pImage, pLayer)
     sprite.image = pImage
 
     sprite.draw = function()
+        if node.parent ~= nil then
+            love.graphics.setColor(1,1,1,node.parent.opacity)
+        else
+            love.graphics.setColor(1,1,1,node.opacity)
+        end
         if not sprite.visible then return end
         if sprite.image == nil then return end
         love.graphics.push()
@@ -162,14 +174,101 @@ newSprite = function(pX, pY, pImage, pLayer)
         love.graphics.rotate(sprite.getRelativeRotation())
         love.graphics.draw(sprite.image,0,0,0,1,1,sprite.image:getWidth() / 2,sprite.image:getHeight() / 2)
         love.graphics.pop()
+        love.graphics.setColor(1,1,1,1)
         sprite.drawChildrens()
     end
 
     return sprite
 end
 
-newParticlesEmitter = function(pX,pY, pLayer)
+newParticlesEmitter = function(pX,pY,pImage,lifeTime, pLayer)
     local emitter = newSpriteNode(pX,pY,pLayer)
 
+    emitter.layer = pLayer
+    emitter.angle = math.pi * 2
+    emitter.lifeTime = lifeTime or -1
+    emitter.particleImage = pImage
+    emitter.particlesAmount = 500
+
+    emitter.particleLifeTime = 0.5
+    emitter.particleLifetimeRandomF = 0
+    emitter.particleSpeed = 100
+    emitter.particleSpeedRandomF = 0
+    emitter.partickeSize = 1
+    emitter.partickeSizeRandomF = 0
+    emitter.particleGravity = 0
+    emitter.particleGravityRandomF = 0
+
+    emitter.update = function(dt)
+        
+        for i= 1, emitter.particlesAmount * dt do
+            local particle = newParticle(emitter.position.x,emitter.position.y,emitter.particleImage,emitter.layer)
+            local angle = love.math.random() * emitter.angle + emitter.rotation
+            particle.velocity = newVector(math.cos(angle),math.sin(angle)) * randomFact(emitter.particleSpeed,emitter.particleSpeedRandomF)
+            particle.life = randomFact(emitter.particleLifeTime, emitter.particleLifetimeRandomF)
+            particle.size = randomFact(emitter.partickeSize, emitter.partickeSizeRandomF)
+            particle.gravity = randomFact(emitter.particleGravity, emitter.particleGravityRandomF)
+        end
+
+        if emitter.lifeTime ~= -1 then
+            emitter.lifeTime = emitter.lifeTime - dt
+            if emitter.lifeTime <= 0 then
+                emitter.remove = true
+            end
+        end
+
+        emitter.updatePosition(dt)
+        emitter.updateChildrens(dt)
+    end
+
     return emitter    
+end
+
+newParticle = function(pX,pY, pImage ,pLayer)
+    local particle = newSpriteNode(pX,pY,pLayer)
+
+    particle.life = 1
+    particle.gravity = 0
+    particle.size = 1
+    particle.image = pImage
+
+    particle.update = function(dt)
+
+        particle.life = particle.life - dt
+        
+        if particle.life <= 0 then
+            particle.remove = true
+        end
+
+        if particle.life < 0.8 / 2 then
+            particle.opacity = particle.opacity - dt
+        end
+        
+        particle.velocity.y = particle.velocity.y + dt * particle.gravity
+        particle.rotation = math.atan2( particle.velocity.y,  particle.velocity.x);
+
+        particle.updatePosition(dt)
+        particle.updateChildrens(dt)
+    end
+
+    particle.draw = function()
+        if particle.parent ~= nil then
+            love.graphics.setColor(1,1,1,particle.parent.opacity)
+        else
+            love.graphics.setColor(1,1,1,particle.opacity)
+        end
+        if not particle.visible then return end
+            local width = particle.image:getWidth()
+            local height = particle.image:getHeight()
+            love.graphics.draw(particle.image,particle.getRelativeX(), particle.getRelativeY(),particle.getRelativeRotation(),particle.size,particle.size,width/2, height/2 )
+        if particle.image ~= nil then
+        else
+            love.graphics.circle("fill", particle.getRelativeX(), particle.getRelativeY(), particle.size)
+        end
+        
+        love.graphics.setColor(1,1,1,1)
+        particle.drawChildrens()
+    end
+
+    return particle
 end

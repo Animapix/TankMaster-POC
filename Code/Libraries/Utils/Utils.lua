@@ -52,3 +52,7 @@ function drawFps(pX, pY, pWidth, pHeight, pMax)
 
     love.graphics.pop()
 end
+
+function randomFact(val,fac)
+    return val - (val * fac) + (love.math.random()  * val * fac)*2
+end
