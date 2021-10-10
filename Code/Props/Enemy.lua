@@ -1,5 +1,5 @@
 function newEnemy(pX,pY,pTarget, pBounds)
-    local enemy = newSpriteNode(pX, pY, "enemies")
+    local enemy = newSprite(pX, pY,love.graphics.newImage("Assets/PlaceHolders/Drone.png"), "enemies")
     enemy.collider = newCircleCollider(pX,pY,8,"enemy",enemy)
 
     enemy.target = pTarget
@@ -38,12 +38,12 @@ function newEnemy(pX,pY,pTarget, pBounds)
             enemy.remove = true
             enemy.collider.remove = true
         end
-        print("enemy take "..amount.." damages, enemy's life = "..enemy.life)
+        --print("enemy take "..amount.." damages, enemy's life = "..enemy.life)
     end
 
     enemy.collider.collide = function(other)
         if other.tag == "enemy" then
-            --enemy.collider.resolveCollision(other)
+            enemy.collider.resolveCollision(other)
         end
     end
 
