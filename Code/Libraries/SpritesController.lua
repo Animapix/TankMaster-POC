@@ -167,3 +167,9 @@ newSprite = function(pX, pY, pImage, pLayer)
 
     return sprite
 end
+
+newParticlesEmitter = function(pX,pY, pLayer)
+    local emitter = newSpriteNode(pX,pY,pLayer)
+
+    return emitter    
+end
