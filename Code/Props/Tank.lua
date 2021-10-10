@@ -21,10 +21,13 @@ function newTank(pX,pY,pBounds)
     tank.addChild(tank.turret)
 
     tank.turret.barrel = newSpriteNode(32,0)
+    tank.turret.barrel.visible  = false
     tank.turret.addChild(tank.turret.barrel)
     tank.turret.barrelRight = newSpriteNode(45,10)
+    tank.turret.barrelRight.visible  = false
     tank.turret.addChild(tank.turret.barrelRight)
     tank.turret.barrelLeft = newSpriteNode(45,-10)
+    tank.turret.barrelLeft.visible  = false
     tank.turret.addChild(tank.turret.barrelLeft)
 
     tank.rifleRate = 0.05
