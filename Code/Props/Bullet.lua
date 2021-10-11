@@ -47,6 +47,7 @@ function newExplosiveBullet(pFirePosition, pDirection, pSpeed, pBounds, pTargetT
             bullet.remove = true
             bullet.collider.remove = true
             print("Explosion")
+            newExplosion(bullet.position.x,bullet.position.y,nil,0.2,10,50,bullet.targetTag, "bullets")
         end
     end
 
@@ -54,6 +55,7 @@ function newExplosiveBullet(pFirePosition, pDirection, pSpeed, pBounds, pTargetT
         if other.tag == bullet.targetTag then
             bullet.remove = true
             bullet.collider.remove = true
+            newExplosion(bullet.position.x,bullet.position.y,nil,0.2,10,50,bullet.targetTag, "bullets")
         end
     end
 
@@ -101,4 +103,31 @@ function newRifleBullet(pFirePosition, pDirection, pSpeed, pBounds, pTargetTag)
     end
 
     return bullet
+end
+
+
+function newExplosion(pX,pY,pImage,pLife, pDamagesAmount,pRange,pTarget,pLayer)
+    local explosion = newSprite(pX,pY,pImage,pLayer)
+
+    explosion.lifeTime = pLife
+    explosion.collider = newCircleCollider(pX,pY,pRange,"explosion")
+    explosion.targetTag = pTarget
+    explosion.damagesAmount = pDamagesAmount
+    
+    explosion.update = function(dt)
+        explosion.lifeTime = explosion.lifeTime - dt
+        if explosion.lifeTime <= 0 then
+            explosion.remove = true
+            explosion.collider.remove = true
+        end
+        --print("update explosion")
+    end
+
+    explosion.collider.collide = function(other)
+        if other.tag == explosion.targetTag  then
+            other.parent.takeDamages(explosion.damagesAmount)
+        end
+    end
+
+    return explosion
 end
