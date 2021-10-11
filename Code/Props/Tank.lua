@@ -167,7 +167,7 @@ function newTank(pX,pY,pBounds)
         if tank.rifleTimer == 0 then
             --Play sound
             local shotSound = love.audio.newSource("Assets/Sounds/Small_Gun_Shot.wav", "static") 
-            shotSound:setVolume(0.3 * soundsLevel)
+            shotSound:setVolume(0.13 * soundsLevel)
             shotSound:play()
 
             local direction = newVector(math.cos(tank.turret.getRelativeRotation()),math.sin(tank.turret.getRelativeRotation()))
