@@ -1,3 +1,4 @@
+require("Props.Doors")
 require("Props.Tank")
 require("Props.Enemy")
 
@@ -7,7 +8,7 @@ local scene = newScene("game")
 local tank
 
 local bounds
-local doors
+local doors = {}
 local sceneState = "start"
 
 local level = 1
@@ -27,9 +28,10 @@ local outArrowSprite
 local music
 
 scene.load = function()
-    
+
     addNewSpritesLayer("floor")
     addNewSpritesLayer("shadows")
+    addNewSpritesLayer("doors")
     addNewSpritesLayer("walls")
     addNewSpritesLayer("tank")
     addNewSpritesLayer("enemies")
@@ -39,20 +41,21 @@ scene.load = function()
 
     bounds = { x = 400, y = 225 , width = 740 , height = 390 }
     
-    local doors = {
-        left = newRectangleCollider(bounds.x - bounds.width/2 - 10, bounds.y, 20, 100, "door"),
-        right = newRectangleCollider(bounds.x + bounds.width/2 + 10, bounds.y, 20, 100, "door"),
-        top = newRectangleCollider(bounds.x, bounds.y - bounds.height / 2 - 10, 100,20, "door"),
-        bottom = newRectangleCollider(bounds.x, bounds.y + bounds.height / 2 + 10, 100,20, "door"),
-    }
+    newRectangleCollider(bounds.x + bounds.width/2 + 10, bounds.y, 20, 100, "door")
     
     newSprite(bounds.x,bounds.y,love.graphics.newImage("Assets/PlaceHolders/Floor.png"), "floor")
     outArrowSprite = newSprite(bounds.x + bounds.width / 2 - 40,bounds.y,love.graphics.newImage("Assets/Images/HUD/Arrow.png"), "floor")
     outArrowSprite.visible = false
     newSprite(bounds.x,bounds.y,love.graphics.newImage("Assets/PlaceHolders/Walls.png"), "walls")
-    newSprite(bounds.x,bounds.y,love.graphics.newImage("Assets/PlaceHolders/DoorsTop.png"), "walls")
-    newSprite(bounds.x,bounds.y,love.graphics.newImage("Assets/PlaceHolders/DoorsBottom.png"), "topWalls")
+    newSprite(bounds.x,bounds.y,love.graphics.newImage("Assets/Images/Arena/Doors bottom.png"), "walls")
+    newSprite(bounds.x,bounds.y,love.graphics.newImage("Assets/Images/Arena/Doors top.png"), "topWalls")
 
+
+    doors.top = newDoors(bounds.x,bounds.y - bounds.height / 2 - 5.5, 0)
+    doors.bottom = newDoors(bounds.x,bounds.y + bounds.height / 2 + 5.5, 180)
+    doors.left = newDoors(bounds.x - bounds.width/2 - 5.5, bounds.y, -90)
+    doors.right = newDoors(bounds.x + bounds.width/2 + 5.5, bounds.y, 90)
+    doors.left.open()
 
     tank = newTank(bounds.x - bounds.width/2 - 100,bounds.y, bounds)
     tank.canOutOfBounds = true
@@ -64,7 +67,7 @@ scene.load = function()
     scene.setupHUD()
 
     level = 1
-    waves = 5
+    waves = 0  -- 5 Temporaire ----------------------------------------------------------------------- !!!!!!!!!!!!!!!!
     spawnTimer = 1
 
     music = love.audio.newSource("Assets/Musics/The3amAssociation_-_Ben_Apres_Rien .wav", "stream")
@@ -83,6 +86,7 @@ scene.update = function(dt)
         else
             tank.canOutOfBounds = false
             sceneState = "game"
+            doors.left.close()
         end
         scene.updateTankAim()
 
@@ -100,11 +104,11 @@ scene.update = function(dt)
 
         if waves <= 0 and #getSprites("enemy") == 0 then
             sceneState = "end"
+            doors.right.open()
             outArrowSprite.visible = true
         end
 
         if tank.life <= 0 then
-            print(tank.life)
             gameOverMenu.visible = true
             sceneState = "pause"
         end
@@ -150,6 +154,8 @@ scene.update = function(dt)
             waves = 5
             spawnTimer = 1
             sceneState = "start"
+            doors.left.open()
+            doors.right.close()
         end
         updateCollisions(dt)
         updateSprites(dt)
@@ -200,7 +206,8 @@ scene.spawnEnemies = function(pQuantity, pSide)
             local y = i%4 * -20 + bounds.y + 30    + love.math.random(-5,5)
             local enemy = newEnemy(x,y,tank,bounds)
             enemy.velocity = newVector(enemy.speed,0)
-            
+            doors.left.open()
+            doors.left.closeWithDelay(pQuantity/4/2 + 0.5)
         end
     elseif pSide == "right" then
         for i=0, pQuantity do
@@ -208,6 +215,8 @@ scene.spawnEnemies = function(pQuantity, pSide)
             local y = i%4 * -20 + bounds.y + 30    + love.math.random(-5,5)
             local enemy = newEnemy(x,y,tank,bounds)
             enemy.velocity = newVector(-enemy.speed,0)
+            doors.right.open()
+            doors.right.closeWithDelay(pQuantity/4/2 + 0.5)
         end
     elseif pSide == "top" then
         for i=0, pQuantity do
@@ -215,7 +224,8 @@ scene.spawnEnemies = function(pQuantity, pSide)
             local y = math.floor(i / 4) * -20 + bounds.y - bounds.height/2 - 50 + love.math.random(-5,5)
             local enemy = newEnemy(x,y,tank,bounds)
             enemy.velocity = newVector(0,enemy.speed)
-            
+            doors.top.open()
+            doors.top.closeWithDelay(pQuantity/4/2 + 0.5)
         end
     elseif pSide == "bottom" then
         for i=0, pQuantity do
@@ -223,7 +233,8 @@ scene.spawnEnemies = function(pQuantity, pSide)
             local y = math.floor(i / 4) * 20 + bounds.y + bounds.height/2 + 50 --+ love.math.random(-5,5)
             local enemy = newEnemy(x,y,tank,bounds)
             enemy.velocity = newVector(0,-enemy.speed)
-            
+            doors.bottom.open()
+            doors.bottom.closeWithDelay(pQuantity/4/2 + 0.5)
         end
     end
 end
