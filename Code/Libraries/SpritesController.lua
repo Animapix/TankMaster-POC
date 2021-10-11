@@ -166,6 +166,7 @@ newSprite = function(pX, pY, pImage, pLayer)
     sprite.splitH = 1
     sprite.splitV = 1
     sprite.loop = true
+    sprite.removeAtEnd = false
 
     sprite.draw = function()
         if sprite.parent ~= nil then
@@ -196,9 +197,24 @@ newSprite = function(pX, pY, pImage, pLayer)
     sprite.updateAnimation = function(dt)
         sprite.frame = sprite.frame + dt * sprite.frameRate
         if sprite.frame >= sprite.splitH * sprite.splitV then 
-            sprite.frame = 1 end
+            if sprite.loop then
+                sprite.frame = 1
+            else
+                sprite.frame = sprite.splitH * sprite.splitV
+                if sprite.removeAtEnd then
+                    sprite.remove = true
+                end
+            end
+        end
         if sprite.frame < 1 then 
-            sprite.frame = sprite.splitH * sprite.splitV - 1 
+            if sprite.loop then
+                sprite.frame = sprite.splitH * sprite.splitV - 1 
+            else
+                sprite.frame = 1
+                if sprite.removeAtEnd then
+                    sprite.remove = true
+                end
+            end
         end
     end
 

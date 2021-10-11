@@ -157,6 +157,10 @@ function newTank(pX,pY,pBounds)
 
     tank.shot = function()
         if tank.bulletTimer == 0 then
+            --Play sound
+            local shotSound = love.audio.newSource("Assets/Sounds/Explosion_Fast.wav", "static") 
+            shotSound:setVolume(0.2)
+            shotSound:play()
             local direction = newVector(math.cos(tank.turret.getRelativeRotation()),math.sin(tank.turret.getRelativeRotation()))
             local bullet = newExplosiveBullet(tank.turret.barrel.getRelativePosition(), direction, 800, tank.bounds, "enemy")
             tank.bulletTimer = tank.bulletRate

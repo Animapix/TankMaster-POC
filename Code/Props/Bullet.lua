@@ -46,8 +46,16 @@ function newExplosiveBullet(pFirePosition, pDirection, pSpeed, pBounds, pTargetT
         if bullet.isOutOfBounds(bullet.bounds) then
             bullet.remove = true
             bullet.collider.remove = true
-            print("Explosion")
+            local expl = newSprite(bullet.position.x,bullet.position.y,love.graphics.newImage("Assets/Images/Explosions/Explosion_2.png"),"bullets")
+            expl.splitH = 8
+            expl.frameRate = 30
+            expl.loop = false
+            expl.removeAtEnd = true
             newExplosion(bullet.position.x,bullet.position.y,nil,0.2,10,50,bullet.targetTag, "bullets")
+            --Play sound
+            local shotSound = love.audio.newSource("Assets/Sounds/Explosion_Far.wav", "static") 
+            shotSound:setVolume(0.1)
+            shotSound:play()
         end
     end
 
@@ -55,7 +63,16 @@ function newExplosiveBullet(pFirePosition, pDirection, pSpeed, pBounds, pTargetT
         if other.tag == bullet.targetTag then
             bullet.remove = true
             bullet.collider.remove = true
+            local expl = newSprite(bullet.position.x,bullet.position.y,love.graphics.newImage("Assets/Images/Explosions/Explosion_2.png"),"bullets")
+            expl.splitH = 8
+            expl.frameRate = 30
+            expl.loop = false
+            expl.removeAtEnd = true
             newExplosion(bullet.position.x,bullet.position.y,nil,0.2,10,50,bullet.targetTag, "bullets")
+            --Play sound
+            local shotSound = love.audio.newSource("Assets/Sounds/Explosion_Far.wav", "static") 
+            shotSound:setVolume(0.1)
+            shotSound:play()
         end
     end
 

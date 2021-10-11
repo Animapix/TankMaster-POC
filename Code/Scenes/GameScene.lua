@@ -74,6 +74,8 @@ scene.load = function()
     music:setLooping( true )
     music:setVolume(0.1 * musicsLevel)
     music:play()
+
+    
 end
 
 scene.update = function(dt)
@@ -283,6 +285,7 @@ scene.unload = function()
     unloadColliders()
     unloadSprites()
     unloadGUI()
+    music:stop()
 end
 
 scene.setupHUD = function()

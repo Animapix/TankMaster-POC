@@ -41,6 +41,15 @@ function newEnemy(pX,pY,pTarget, pBounds)
         if enemy.life <= 0 then
             enemy.remove = true
             enemy.collider.remove = true
+            local expl = newSprite(enemy.position.x,enemy.position.y,love.graphics.newImage("Assets/Images/Explosions/Explosion_1.png"),"bullets")
+            expl.splitH = 8
+            expl.frameRate = 30
+            expl.loop = false
+            expl.removeAtEnd = true
+            --Play sound
+            local shotSound = love.audio.newSource("Assets/Sounds/Explosion_Far.wav", "static") 
+            shotSound:setVolume(0.05)
+            shotSound:play()
         end
         --print("enemy take "..amount.." damages, enemy's life = "..enemy.life)
     end
