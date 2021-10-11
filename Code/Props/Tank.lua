@@ -95,7 +95,7 @@ function newTank(pX,pY,pBounds)
         tank.trackR.frameRate = (tank.throttleCmd - tank.steeringCmd * 1.5) * 35
 
         --Adjust tracks sound
-        tank.tracksSound:setVolume(math.max(math.abs(tank.throttleCmd), math.abs(tank.steeringCmd)) * 0.5)
+        tank.tracksSound:setVolume(math.max(math.abs(tank.throttleCmd), math.abs(tank.steeringCmd)) * 0.5 * soundsLevel)
 
         tank.updatePosition(dt)
         tank.updateChildrens(dt)
@@ -162,7 +162,7 @@ function newTank(pX,pY,pBounds)
         if tank.rifleTimer == 0 then
             --Play sound
             local shotSound = love.audio.newSource("Assets/Sounds/Small_Gun_Shot.wav", "static") 
-            shotSound:setVolume(0.3)
+            shotSound:setVolume(0.3 * soundsLevel)
             shotSound:play()
 
             local direction = newVector(math.cos(tank.turret.getRelativeRotation()),math.sin(tank.turret.getRelativeRotation()))

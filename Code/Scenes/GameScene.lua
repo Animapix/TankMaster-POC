@@ -22,6 +22,8 @@ local levelCounterLabel
 
 local outArrowSprite
 
+local music
+
 scene.load = function()
     
     addNewSpritesLayer("floor")
@@ -54,6 +56,11 @@ scene.load = function()
     sceneState = "start"
 
     scene.setupHUD()
+
+    music = love.audio.newSource("Assets/Musics/The3amAssociation_-_Ben_Apres_Rien .wav", "stream")
+    music:setLooping( true )
+    music:setVolume(0.1 * musicsLevel)
+    music:play()
 end
 
 scene.update = function(dt)
