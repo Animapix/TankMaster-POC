@@ -15,6 +15,8 @@ local waves = 5
 local spawnTimer = 1
 
 -- Gui controls
+local pauseMenu
+local gameOverMenu
 local lifeBar
 local enemiesCounterLabel
 local wavesCounterLabel
@@ -55,7 +57,14 @@ scene.load = function()
     tank.canOutOfBounds = true
     sceneState = "start"
 
+    --Setup GUI
+    pauseMenu = scene.setupPauseMenu()
+    gameOverMenu = scene.setupGameOverMenu()
     scene.setupHUD()
+
+    level = 1
+    waves = 5
+    spawnTimer = 1
 
     music = love.audio.newSource("Assets/Musics/The3amAssociation_-_Ben_Apres_Rien .wav", "stream")
     music:setLooping( true )
@@ -76,6 +85,9 @@ scene.update = function(dt)
         end
         scene.updateTankAim()
 
+        updateCollisions(dt)
+        updateSprites(dt)
+
     elseif sceneState == "game" then ---------------------- Game ------------------------
 
         scene.updateTankControls(dt)
@@ -90,6 +102,17 @@ scene.update = function(dt)
             outArrowSprite.visible = true
         end
 
+        if tank.life <= 0 then
+            print(tank.life)
+            gameOverMenu.visible = true
+            sceneState = "pause"
+        end
+
+        updateCollisions(dt)
+        updateSprites(dt)
+
+    elseif sceneState == "pause" then ---------------------- PAUSE ------------------------
+
     elseif sceneState == "end" then ---------------------- End of round ------------------------
 
         -- wait for tank go out to right door
@@ -100,6 +123,8 @@ scene.update = function(dt)
         end
         scene.updateTankControls(dt)
         scene.updateTankAim()
+        updateCollisions(dt)
+        updateSprites(dt)
     
     elseif sceneState == "goOut" then ---------------------- TANK GO OUT ------------------------
 
@@ -125,6 +150,8 @@ scene.update = function(dt)
             spawnTimer = 1
             sceneState = "start"
         end
+        updateCollisions(dt)
+        updateSprites(dt)
 
     end
 
@@ -135,8 +162,7 @@ scene.update = function(dt)
     wavesCounterLabel.text = waves
     levelCounterLabel.text = level
     
-    updateCollisions(dt)
-    updateSprites(dt)
+    
     updateGUI(dt)
 end
 
@@ -232,10 +258,19 @@ scene.mousePressed = function(pX,pY,pBtn)
 end
 
 scene.keyPressed = function(pKey)
+    if pKey == "escape" and sceneState == "game" then
+        sceneState = "pause"
+        pauseMenu.visible = true
+    elseif pKey == "escape" and sceneState == "pause" then
+        sceneState = "game"
+        pauseMenu.visible = false
+    end
 end
 
 scene.unload = function()
     unloadColliders()
+    unloadSprites()
+    unloadGUI()
 end
 
 scene.setupHUD = function()
@@ -267,6 +302,61 @@ scene.setupHUD = function()
     panel.addChild(levelLabel)
 
     panel.visible = true
+    addControl(panel)
+
+    return panel
+end
+
+scene.setupPauseMenu = function()
+    local font = love.graphics.newFont("Assets/Fonts/kenvector_future_thin.ttf", 12)
+
+    local panel = newPanel(300,150,200,150)
+
+    local label = newLabel(0,0,200,20,"PAUSE",font)
+    label.color = { 1,1,1,0.7 }
+    panel.addChild(label)
+
+    local buttonResume = newButton(50,50,100,15,"RESUME",font)
+    buttonResume.setEvent("pressed", function(pState)
+        if pState == "end" then
+            pauseMenu.visible = false
+            sceneState = "game"
+        end
+    end )
+    panel.addChild(buttonResume)
+
+    local buttonMenu = newButton(50,100,100,15,"MENU",font)
+    buttonMenu.setEvent("pressed", function(pState)
+        if pState == "end" then
+            changeScene("menu")
+        end
+    end )
+    panel.addChild(buttonMenu)
+
+    panel.visible = false
+    addControl(panel)
+
+    return panel
+end
+
+scene.setupGameOverMenu = function()
+    local font = love.graphics.newFont("Assets/Fonts/kenvector_future_thin.ttf", 12)
+
+    local panel = newPanel(300,150,200,150)
+
+    local label = newLabel(0,0,200,20,"GAME OVER",font)
+    label.color = { 1,1,1,0.7 }
+    panel.addChild(label)
+
+    local buttonMenu = newButton(50,100,100,15,"MENU",font)
+    buttonMenu.setEvent("pressed", function(pState)
+        if pState == "end" then
+            changeScene("menu")
+        end
+    end )
+    panel.addChild(buttonMenu)
+
+    panel.visible = false
     addControl(panel)
 
     return panel
