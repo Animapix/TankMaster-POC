@@ -29,6 +29,7 @@ local music
 scene.load = function()
     
     addNewSpritesLayer("floor")
+    addNewSpritesLayer("shadows")
     addNewSpritesLayer("walls")
     addNewSpritesLayer("tank")
     addNewSpritesLayer("enemies")

@@ -14,6 +14,8 @@ function newTank(pX,pY,pBounds)
         end
     end
 
+    tank.shadow = newSprite(0,0,love.graphics.newImage("Assets/Images/Tank/Shadow.png"), "shadows")
+
     tank.tracksSound = love.audio.newSource("Assets/Sounds/tracks.wav", "stream")
     tank.tracksSound:setLooping( true )
     tank.tracksSound:play()
@@ -100,6 +102,8 @@ function newTank(pX,pY,pBounds)
         tank.updatePosition(dt)
         tank.updateChildrens(dt)
         tank.isOutOfBounds(tank.bounds)
+
+        tank.shadow.position = tank.position
     end
 
     tank.reset = function(pX,pY)
