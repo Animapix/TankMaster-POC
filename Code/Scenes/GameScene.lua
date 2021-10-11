@@ -173,6 +173,7 @@ scene.spawnEnemies = function(pQuantity, pSide)
             local y = i%4 * -20 + bounds.y + 30    + love.math.random(-5,5)
             local enemy = newEnemy(x,y,tank,bounds)
             enemy.velocity = newVector(enemy.speed,0)
+            
         end
     elseif pSide == "right" then
         for i=0, pQuantity do
@@ -187,6 +188,7 @@ scene.spawnEnemies = function(pQuantity, pSide)
             local y = math.floor(i / 4) * -20 + bounds.y - bounds.height/2 - 50 + love.math.random(-5,5)
             local enemy = newEnemy(x,y,tank,bounds)
             enemy.velocity = newVector(0,enemy.speed)
+            
         end
     elseif pSide == "bottom" then
         for i=0, pQuantity do
@@ -194,6 +196,7 @@ scene.spawnEnemies = function(pQuantity, pSide)
             local y = math.floor(i / 4) * 20 + bounds.y + bounds.height/2 + 50 --+ love.math.random(-5,5)
             local enemy = newEnemy(x,y,tank,bounds)
             enemy.velocity = newVector(0,-enemy.speed)
+            
         end
     end
 end

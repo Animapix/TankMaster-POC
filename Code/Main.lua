@@ -11,7 +11,7 @@ require("Scenes.TestScene")
 love.graphics.setDefaultFilter("nearest")
 
 soundsLevel = 0.2
-musicsLevel = 0.5
+musicsLevel = 0.0
 
 function love.load()
     love.window.setMode(1600,900)

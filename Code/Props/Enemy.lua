@@ -12,6 +12,8 @@ function newEnemy(pX,pY,pTarget, pBounds)
 
     enemy.update = function(dt)
         if enemy.state == "spawn" then
+            local dir = enemy.position.dir(enemy.target.position)
+            enemy.rotation = - math.atan2(dir.x,dir.y) + math.rad(90)
             if enemy.isInBounds(enemy.bounds) then
                 enemy.state = "attack"
             end
@@ -25,6 +27,7 @@ function newEnemy(pX,pY,pTarget, pBounds)
                 local dir = enemy.position.dir(enemy.target.position)
                 enemy.velocity = dir * enemy.speed
                 enemy.velocity = enemy.velocity + noiseVector
+                enemy.rotation = - math.atan2(dir.x,dir.y) + math.rad(90)
             end
             enemy.isOutOfBounds(enemy.bounds)
         end
