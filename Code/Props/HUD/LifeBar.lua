@@ -10,7 +10,7 @@ function newLifeBar(pX,pY,pWidth,pHeight, pMax)
 
     lifeBar.drawlifeBar = function()
         
-        local numberOfSegment = 35 * lifeBar.value / lifeBar.max
+        local numberOfSegment = 36 * lifeBar.value / lifeBar.max
 
         
         love.graphics.setColor(lifeBar.colors[1])
@@ -27,7 +27,7 @@ function newLifeBar(pX,pY,pWidth,pHeight, pMax)
         love.graphics.translate(lifeBar.getRelativePosition())        
         love.graphics.translate(5,18)
 
-        for seg = 0, numberOfSegment do
+        for seg = 1, numberOfSegment do
             
             --[[love.graphics.setColor(lifeBar.colors[1])
             if seg < 35 * 0.5 then
