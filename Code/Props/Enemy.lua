@@ -1,3 +1,5 @@
+local shotSound = love.audio.newSource("Assets/Sounds/Explosion_Far.wav", "static") 
+
 function newEnemy(pX,pY,pTarget, pBounds)
     local enemy = newSprite(pX, pY,love.graphics.newImage("Assets/PlaceHolders/Drone.png"), "enemies")
     enemy.collider = newCircleCollider(pX,pY,8,"enemy",enemy)
@@ -47,8 +49,8 @@ function newEnemy(pX,pY,pTarget, pBounds)
             expl.loop = false
             expl.removeAtEnd = true
             --Play sound
-            local shotSound = love.audio.newSource("Assets/Sounds/Explosion_Far.wav", "static") 
-            shotSound:setVolume(0.05)
+            shotSound:stop()
+            shotSound:setVolume(0.2)
             shotSound:play()
         end
         --print("enemy take "..amount.." damages, enemy's life = "..enemy.life)

@@ -2,6 +2,8 @@ local explosiveBulletImage = love.graphics.newImage("Assets/PlaceHolders/Bullet.
 local rifleBulletImage = love.graphics.newImage("Assets/PlaceHolders/BulletRifle.png")
 local sparkleImage = love.graphics.newImage("Assets/PlaceHolders/Sparkle.png")
 
+local shotSound = love.audio.newSource("Assets/Sounds/Explosion_Far.wav", "static") 
+
 function newBullet(pFirePosition, pDirection, pSpeed, pBounds, pImage, pTargetTag)
     local bullet = newSprite(pFirePosition.x,pFirePosition.y,pImage, "bullets")
     
@@ -53,7 +55,7 @@ function newExplosiveBullet(pFirePosition, pDirection, pSpeed, pBounds, pTargetT
             expl.removeAtEnd = true
             newExplosion(bullet.position.x,bullet.position.y,nil,0.2,10,50,bullet.targetTag, "bullets")
             --Play sound
-            local shotSound = love.audio.newSource("Assets/Sounds/Explosion_Far.wav", "static") 
+            shotSound:stop()
             shotSound:setVolume(0.1)
             shotSound:play()
         end
@@ -70,7 +72,7 @@ function newExplosiveBullet(pFirePosition, pDirection, pSpeed, pBounds, pTargetT
             expl.removeAtEnd = true
             newExplosion(bullet.position.x,bullet.position.y,nil,0.2,10,50,bullet.targetTag, "bullets")
             --Play sound
-            local shotSound = love.audio.newSource("Assets/Sounds/Explosion_Far.wav", "static") 
+            shotSound:stop()
             shotSound:setVolume(0.1)
             shotSound:play()
         end

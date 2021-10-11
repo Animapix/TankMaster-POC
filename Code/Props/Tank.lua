@@ -1,5 +1,8 @@
 require("Props.Bullet")
 
+local shotSound = love.audio.newSource("Assets/Sounds/Explosion_Fast.wav", "static") 
+local smallShotSound = love.audio.newSource("Assets/Sounds/Small_Gun_Shot.wav", "static") 
+
 function newTank(pX,pY,pBounds)
     local tank = newSpriteNode(pX, pY, "tank")
 
@@ -158,8 +161,8 @@ function newTank(pX,pY,pBounds)
     tank.shot = function()
         if tank.bulletTimer == 0 then
             --Play sound
-            local shotSound = love.audio.newSource("Assets/Sounds/Explosion_Fast.wav", "static") 
-            shotSound:setVolume(0.2)
+            shotSound:stop()
+            shotSound:setVolume(0.1)
             shotSound:play()
             local direction = newVector(math.cos(tank.turret.getRelativeRotation()),math.sin(tank.turret.getRelativeRotation()))
             local bullet = newExplosiveBullet(tank.turret.barrel.getRelativePosition(), direction, 800, tank.bounds, "enemy")
@@ -170,9 +173,9 @@ function newTank(pX,pY,pBounds)
     tank.secondaryShot = function()
         if tank.rifleTimer == 0 then
             --Play sound
-            local shotSound = love.audio.newSource("Assets/Sounds/Small_Gun_Shot.wav", "static") 
-            shotSound:setVolume(0.13 * soundsLevel)
-            shotSound:play()
+            smallShotSound:stop()
+            smallShotSound:setVolume(0.13 * soundsLevel)
+            smallShotSound:play()
 
             local direction = newVector(math.cos(tank.turret.getRelativeRotation()),math.sin(tank.turret.getRelativeRotation()))
             local bulletLeft = newRifleBullet(tank.turret.barrelLeft.getRelativePosition(), direction, 1000, tank.bounds, "enemy")
