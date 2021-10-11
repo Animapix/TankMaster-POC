@@ -161,6 +161,12 @@ newSprite = function(pX, pY, pImage, pLayer)
 
     sprite.image = pImage
 
+    sprite.frame = 1
+    sprite.frameRate = 0
+    sprite.splitH = 1
+    sprite.splitV = 1
+    sprite.loop = true
+
     sprite.draw = function()
         if sprite.parent ~= nil then
             love.graphics.setColor(1,1,1,sprite.parent.opacity)
@@ -169,13 +175,43 @@ newSprite = function(pX, pY, pImage, pLayer)
         end
         if not sprite.visible then return end
         if sprite.image == nil then return end
+
+        local quad = sprite.getQuad(math.floor(sprite.frame))
+
         love.graphics.push()
         love.graphics.translate(sprite.getRelativeX(),sprite.getRelativeY())
         love.graphics.rotate(sprite.getRelativeRotation())
-        love.graphics.draw(sprite.image,0,0,0,1,1,sprite.image:getWidth() / 2,sprite.image:getHeight() / 2)
+        love.graphics.draw(sprite.image,quad, 0, 0,0,sprite.scale,sprite.scale, sprite.image:getWidth()/2 / sprite.splitH, sprite.image:getHeight() /2/ sprite.splitV)
         love.graphics.pop()
         love.graphics.setColor(1,1,1,1)
         sprite.drawChildrens()
+    end
+
+    sprite.update = function(dt)
+        sprite.updatePosition(dt)
+        sprite.updateAnimation(dt)
+        sprite.updateChildrens(dt)
+    end
+
+    sprite.updateAnimation = function(dt)
+        sprite.frame = sprite.frame + dt * sprite.frameRate
+        if sprite.frame >= sprite.splitH * sprite.splitV then 
+            sprite.frame = 1 end
+        if sprite.frame < 1 then 
+            sprite.frame = sprite.splitH * sprite.splitV - 1 
+        end
+    end
+
+    sprite.getQuad = function(frame)
+        local row = math.ceil(frame/sprite.splitH)
+        local column = frame - row * sprite.splitH + sprite.splitH
+        local width = sprite.image:getWidth() / sprite.splitH
+        local height = sprite.image:getHeight() / sprite.splitV
+    
+        local x = (column - 1) * width
+        local y = (row - 1) * height
+    
+        return love.graphics.newQuad(x,y,width,height,sprite.image:getWidth(),sprite.image:getHeight())
     end
 
     return sprite

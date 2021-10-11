@@ -64,7 +64,7 @@ function newRifleBullet(pFirePosition, pDirection, pSpeed, pBounds, pTargetTag)
     local bullet = newBullet(pFirePosition, pDirection, pSpeed, pBounds, rifleBulletImage, pTargetTag)
 
     bullet.collider = newCircleCollider(0,0,1)
-    bullet.damageAmount = 35
+    bullet.damageAmount = 50
 
     bullet.update = function(dt)
        
@@ -89,14 +89,14 @@ function newRifleBullet(pFirePosition, pDirection, pSpeed, pBounds, pTargetTag)
 
     bullet.spawnSparkles = function()
         local emitter = newParticlesEmitter(bullet.position.x,bullet.position.y,sparkleImage, 0.01 ,"particles")
-        emitter.particlesAmount = 300
+        emitter.particlesAmount = 1000
         emitter.particleLifeTime = 0.1
         emitter.particleLifetimeRandomF = 0.5
         emitter.particleSpeed = 500
         emitter.particleSpeedRandomF = 0.8
         emitter.partickeSize = 1
         emitter.partickeSizeRandomF = 0.2
-        emitter.angle = math.pi / 5 
+        emitter.angle = math.pi / 3 
         emitter.rotation = bullet.rotation - math.pi
     end
 

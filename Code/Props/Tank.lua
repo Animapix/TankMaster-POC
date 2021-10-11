@@ -14,11 +14,24 @@ function newTank(pX,pY,pBounds)
         end
     end
 
-    tank.chassis = newSprite(0,0,love.graphics.newImage("Assets/PlaceHolders/Tank.png"))
+    tank.tracksSound = love.audio.newSource("Assets/Sounds/tracks.wav", "stream")
+    tank.tracksSound:setLooping( true )
+    tank.tracksSound:play()
+
+    tank.trackR = newSprite(0,12,love.graphics.newImage("Assets/Images/Tank/Tracks.png"))
+    tank.trackR.splitV = 5
+    tank.addChild(tank.trackR)
+    tank.trackL = newSprite(0,-12,love.graphics.newImage("Assets/Images/Tank/Tracks.png"))
+    tank.trackL.splitV = 5
+    tank.addChild(tank.trackL)
+
+    tank.chassis = newSprite(0,0,love.graphics.newImage("Assets/Images/Tank/Chassis.png"))
     tank.addChild(tank.chassis)
 
-    tank.turret = newSprite(0,0,love.graphics.newImage("Assets/PlaceHolders/turret.png"))
+    tank.turret = newSprite(0,0,love.graphics.newImage("Assets/Images/Tank/turret.png"))
     tank.addChild(tank.turret)
+
+    
 
     tank.turret.barrel = newSpriteNode(32,0)
     tank.turret.barrel.visible  = false
@@ -30,7 +43,7 @@ function newTank(pX,pY,pBounds)
     tank.turret.barrelLeft.visible  = false
     tank.turret.addChild(tank.turret.barrelLeft)
 
-    tank.rifleRate = 0.05
+    tank.rifleRate = 0.1
     tank.rifleTimer = 0
     tank.bulletRate = 1.0
     tank.bulletTimer = 0
@@ -75,7 +88,14 @@ function newTank(pX,pY,pBounds)
         tank.invincibleTimer = tank.invincibleTimer - dt
         if tank.invincibleTimer <= 0 then 
             tank.invincibleTimer = 0
-        end  
+        end 
+
+        --Adjust tracks animation speed
+        tank.trackL.frameRate = (tank.throttleCmd + tank.steeringCmd * 1.5) * 35
+        tank.trackR.frameRate = (tank.throttleCmd - tank.steeringCmd * 1.5) * 35
+
+        --Adjust tracks sound
+        tank.tracksSound:setVolume(math.max(math.abs(tank.throttleCmd), math.abs(tank.steeringCmd)) * 0.5)
 
         tank.updatePosition(dt)
         tank.updateChildrens(dt)
@@ -140,6 +160,11 @@ function newTank(pX,pY,pBounds)
 
     tank.secondaryShot = function()
         if tank.rifleTimer == 0 then
+            --Play sound
+            local shotSound = love.audio.newSource("Assets/Sounds/Small_Gun_Shot.wav", "static") 
+            shotSound:setVolume(0.3)
+            shotSound:play()
+
             local direction = newVector(math.cos(tank.turret.getRelativeRotation()),math.sin(tank.turret.getRelativeRotation()))
             local bulletLeft = newRifleBullet(tank.turret.barrelLeft.getRelativePosition(), direction, 1000, tank.bounds, "enemy")
             local bulletRight = newRifleBullet(tank.turret.barrelRight.getRelativePosition(), direction, 1000, tank.bounds, "enemy")
