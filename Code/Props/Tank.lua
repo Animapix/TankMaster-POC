@@ -19,6 +19,7 @@ function newTank(pX,pY,pBounds)
     tank.tracksSound = love.audio.newSource("Assets/Sounds/tracks.wav", "stream")
     tank.tracksSound:setLooping( true )
     tank.tracksSound:play()
+    tank.tracksSound:setVolume(0)
 
     tank.trackR = newSprite(0,12,love.graphics.newImage("Assets/Images/Tank/Tracks.png"))
     tank.trackR.splitV = 5
@@ -149,7 +150,7 @@ function newTank(pX,pY,pBounds)
         
         tank.life = tank.life - amount
         if tank.life <= 0 then
-            print("tank is dead")
+            tank.tracksSound:stop()
         end
         --print("tank take "..amount.." damages, tank's life = "..tank.life)
     end

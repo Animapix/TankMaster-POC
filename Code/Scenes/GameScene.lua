@@ -67,7 +67,7 @@ scene.load = function()
     scene.setupHUD()
 
     level = 1
-    waves = 0  -- 5 Temporaire ----------------------------------------------------------------------- !!!!!!!!!!!!!!!!
+    waves = 5
     spawnTimer = 1
 
     music = love.audio.newSource("Assets/Musics/The3amAssociation_-_Ben_Apres_Rien .wav", "stream")
