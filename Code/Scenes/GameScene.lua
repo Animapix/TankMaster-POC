@@ -5,6 +5,33 @@ require("Props.Enemy")
 require("Props.HUD.LifeBar")
 
 local scene = newScene("game")
+
+local Shadows = require("shadows")
+local LightWorld = require("shadows.LightWorld")
+Light = require("shadows.Light")
+
+
+lightWorld = LightWorld:new()
+
+
+
+local newLight = Light:new(lightWorld, 500)
+newLight:SetPosition(400,225,2)
+
+local CircleShadow = require("shadows.ShadowShapes.CircleShadow")
+local Body = require("shadows.Body")
+local newBody = Body:new(lightWorld)
+local newCircleShadow = CircleShadow:new(newBody, 0, 0, 20)
+
+
+local light = Light:new(lightWorld, 100)
+light:SetColor(255,0.2,0.2,255)
+light:SetPosition(100,100,2)
+
+local RectangleRoom = require("shadows.Room.RectangleRoom")
+Room = RectangleRoom:new(lightWorld, 50, 50, 300, 300)
+
+
 local tank
 
 local bounds
@@ -80,6 +107,8 @@ end
 
 scene.update = function(dt)
 
+    --newLight:SetPosition(love.mouse.getX()/2,love.mouse.getY()/2,10)
+    newBody:SetPosition(tank.position.x,tank.position.y)
     if sceneState == "start" then ---------------------- Start ------------------------
         
         -- move tank forward to center of arena
@@ -170,9 +199,12 @@ scene.update = function(dt)
     enemiesCounterLabel.text = #getSprites("enemy")
     wavesCounterLabel.text = waves
     levelCounterLabel.text = level
-    
+
+
+    lightWorld:Update()
     
     updateGUI(dt)
+
 end
 
 
@@ -262,6 +294,7 @@ scene.draw = function()
     --drawColliders()
     love.graphics.setColor(1,1,1)
     
+    lightWorld:Draw()
     drawGUI()
 end
 

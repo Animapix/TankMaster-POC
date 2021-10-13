@@ -12,6 +12,11 @@ function newEnemy(pX,pY,pTarget, pBounds)
     enemy.bounds = pBounds
     enemy.state = "spawn"
 
+
+    
+    enemy.light = Light:new(lightWorld, 100)
+    
+
     enemy.update = function(dt)
         if enemy.state == "spawn" then
             local dir = enemy.position.dir(enemy.target.position)
@@ -36,6 +41,8 @@ function newEnemy(pX,pY,pTarget, pBounds)
         
         enemy.updatePosition(dt)
         enemy.updateChildrens(dt)
+
+        enemy.light:SetPosition(enemy.position.x,enemy.position.y,1)
     end
 
     enemy.takeDamages = function(amount)
@@ -52,6 +59,8 @@ function newEnemy(pX,pY,pTarget, pBounds)
             shotSound:stop()
             shotSound:setVolume(0.2)
             shotSound:play()
+
+            enemy.light:Remove()
         end
         --print("enemy take "..amount.." damages, enemy's life = "..enemy.life)
     end
