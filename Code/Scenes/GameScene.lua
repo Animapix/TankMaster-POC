@@ -6,6 +6,8 @@ require("Props.Gem")
 require("Props.HUD.LifeBar")
 
 local scene = newScene("game")
+local camera = require("Libraries.Utils.Camera")
+
 local tank
 
 local bounds
@@ -42,7 +44,7 @@ scene.load = function()
     addNewSpritesLayer("topWalls")
 
     bounds = { x = 400, y = 225 , width = 740 , height = 390 }
-    
+
     newRectangleCollider(bounds.x + bounds.width/2 + 10, bounds.y, 20, 100, "door")
     
     newSprite(bounds.x,bounds.y,love.graphics.newImage("Assets/PlaceHolders/Floor.png"), "floor")
@@ -178,6 +180,7 @@ scene.update = function(dt)
     
     updateGUI(dt)
     updateTweening(dt)
+    camera.update(dt,newVector(400,300))
 end
 
 
@@ -260,6 +263,11 @@ scene.updateTankControls = function(dt)
 end
 
 scene.draw = function()
+
+    love.graphics.push()
+    love.graphics.translate(camera.x,camera.y)
+
+
     drawSprites()
 
     love.graphics.setColor(0,1,0)
@@ -267,6 +275,8 @@ scene.draw = function()
     --drawColliders()
     love.graphics.setColor(1,1,1)
     
+    love.graphics.pop()
+
     drawGUI()
 end
 

@@ -44,11 +44,11 @@ function newDoors(pX,pY, pAngle)
     end
 
     doors.draw = function()
+        local camera = require("Libraries.Utils.Camera")
         local size = 136
         local pos = newVector(love.graphics.transformPoint(doors.position.x - size/2,doors.position.y - size/2))
         
-
-        love.graphics.setScissor(pos.x,pos.y,love.graphics.transformPoint(size,size))
+        love.graphics.setScissor(pos.x,pos.y,love.graphics.transformPoint(size - camera.x,size - camera.y))
         doors.drawChildrens()
         love.graphics.setScissor()
 

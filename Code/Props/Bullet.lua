@@ -132,7 +132,8 @@ function newExplosion(pX,pY,pImage,pLife, pDamagesAmount,pRange,pTarget,pLayer)
     explosion.collider = newCircleCollider(pX,pY,pRange,"explosion")
     explosion.targetTag = pTarget
     explosion.damagesAmount = pDamagesAmount
-    
+    require("Libraries.Utils.Camera").startShake(0.2,200)
+
     explosion.update = function(dt)
         explosion.lifeTime = explosion.lifeTime - dt
         if explosion.lifeTime <= 0 then

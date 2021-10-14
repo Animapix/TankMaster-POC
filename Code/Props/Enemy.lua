@@ -70,7 +70,7 @@ function newEnemy(pX,pY,pTarget, pBounds)
             shotSound:stop()
             shotSound:setVolume(0.2)
             shotSound:play()
-
+            require("Libraries.Utils.Camera").startShake(0.1,20)
             newGem(enemy.position.x,enemy.position.y)
         end
         --print("enemy take "..amount.." damages, enemy's life = "..enemy.life)
