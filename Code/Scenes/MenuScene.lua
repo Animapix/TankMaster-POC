@@ -7,13 +7,18 @@ scene.load = function()
     
     local panel = newPanel(300,150,200,150)
 
-    local label = newLabel(0,10,200,40,"TANK MASTER",fontTitle)
+    local label = newLabel(0,50,200,40,"TANK MASTER",fontTitle)
     label.color = { 1,1,1,0.7 }
     panel.addChild(label)
 
-    local button = newButton(50,75,100,15,"PLAY",font)
+    local button = newButton(50,105,100,15,"PLAY",font)
     button.setEvent("pressed", scene.onGameButtonPressed)
     panel.addChild(button)
+
+
+    newTween(panel,"y",-200,150,0.8,tweenTypes.quarticOut)
+    newTween(label,"y",label.y,10,0.8,tweenTypes.quarticInOut, 0.2)
+    newTween(button,"y",button.y,75,0.8,tweenTypes.quarticInOut, 0.2)
 
     addControl(panel)
 end
@@ -26,6 +31,7 @@ end
 
 scene.update = function(dt)
     updateGUI(dt)
+    updateTweening(dt)
 end
 
 scene.draw = function()

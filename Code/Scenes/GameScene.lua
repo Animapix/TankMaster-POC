@@ -45,7 +45,7 @@ scene.load = function()
     
     newSprite(bounds.x,bounds.y,love.graphics.newImage("Assets/PlaceHolders/Floor.png"), "floor")
     outArrowSprite = newSprite(bounds.x + bounds.width / 2 - 40,bounds.y,love.graphics.newImage("Assets/Images/HUD/Arrow.png"), "floor")
-    outArrowSprite.visible = false
+    outArrowSprite.opacity = 0.0
     newSprite(bounds.x,bounds.y,love.graphics.newImage("Assets/PlaceHolders/Walls.png"), "walls")
     newSprite(bounds.x,bounds.y,love.graphics.newImage("Assets/Images/Arena/Doors bottom.png"), "walls")
     newSprite(bounds.x,bounds.y,love.graphics.newImage("Assets/Images/Arena/Doors top.png"), "topWalls")
@@ -107,7 +107,8 @@ scene.update = function(dt)
         if waves <= 0 and #getSprites("enemy") == 0 then
             sceneState = "end"
             doors.right.open()
-            outArrowSprite.visible = true
+            newTween(outArrowSprite,"opacity",outArrowSprite.opacity,1.0,0.8,tweenTypes.quarticIn)
+            --outArrowSprite.visible = true
         end
 
         if tank.life <= 0 then
@@ -126,7 +127,8 @@ scene.update = function(dt)
         tank.collideRightDoor = function()
             sceneState = "goOut"
             tank.canOutOfBounds = true
-            outArrowSprite.visible = false
+            newTween(outArrowSprite,"opacity",outArrowSprite.opacity,0.0,0.8,tweenTypes.quarticOut)
+            --outArrowSprite.visible = false
         end
         scene.updateTankControls(dt)
         scene.updateTankAim()
@@ -173,6 +175,7 @@ scene.update = function(dt)
     
     
     updateGUI(dt)
+    updateTweening(dt)
 end
 
 
@@ -293,31 +296,39 @@ scene.setupHUD = function()
 
     local panel = newControl(0,0)
 
-    lifeBar = newLifeBar(0,0,300,20,500)
+    lifeBar = newLifeBar(0,-50,300,20,500)
     panel.addChild(lifeBar)
 
-    enemiesCounterLabel = newLabel(200,5,100,20,"0",font)
+    enemiesCounterLabel = newLabel(200,-45,100,20,"0",font)
     enemiesCounterLabel.color = { 1,1,1,0.7 }
     panel.addChild(enemiesCounterLabel)
 
-    wavesCounterLabel = newLabel(550,5,100,20,"0",font)
+    wavesCounterLabel = newLabel(550,-45,100,20,"0",font)
     wavesCounterLabel.color = { 1,1,1,0.7 }
     panel.addChild(wavesCounterLabel)
     
-    local wavesLabel = newLabel(500,5,100,20,"Waves",font)
+    local wavesLabel = newLabel(500,-45,100,20,"Waves",font)
     wavesLabel.color = { 1,1,1,0.7 }
     panel.addChild(wavesLabel)
 
-    levelCounterLabel = newLabel(700,5,100,20,level,font)
+    levelCounterLabel = newLabel(700,-45,100,20,level,font)
     levelCounterLabel.color = { 1,1,1,0.7 }
     panel.addChild(levelCounterLabel)
 
-    local levelLabel = newLabel(650,5,100,20,"Level",font)
+    local levelLabel = newLabel(650,-45,100,20,"Level",font)
     levelLabel.color = { 1,1,1,0.7 }
     panel.addChild(levelLabel)
 
     panel.visible = true
     addControl(panel)
+
+    newTween(lifeBar,"y",lifeBar.y,0,0.8,tweenTypes.quarticOut)
+    newTween(enemiesCounterLabel,"y",enemiesCounterLabel.y,5,0.8,tweenTypes.quarticOut,0.1)
+    newTween(wavesCounterLabel,"y",wavesCounterLabel.y,5,0.8,tweenTypes.quarticOut,0.2)
+    newTween(wavesLabel,"y",wavesLabel.y,5,0.8,tweenTypes.quarticOut,0.3)
+    
+    newTween(levelCounterLabel,"y",levelCounterLabel.y,5,0.8,tweenTypes.quarticOut,0.4)
+    newTween(levelLabel,"y",levelLabel.y,5,0.8,tweenTypes.quarticOut,0.5)
 
     return panel
 end

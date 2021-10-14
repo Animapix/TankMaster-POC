@@ -17,7 +17,7 @@ musicsLevel = 0.1
 function love.load()
     love.window.setMode(1600,900,{ resizable = false, vsync = true, centered = true})
     love.window.setTitle("TankMaster")
-    changeScene("test")
+    changeScene("menu")
 end
 
 function love.update(dt)

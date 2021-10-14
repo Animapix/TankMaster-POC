@@ -64,6 +64,10 @@ function setValue (table, path, value)
         if d == "." then
             t = t[w]
         else
+            if t == nil then 
+                print("No field for object."..path) 
+                return
+            end
             t[w] = value
         end
     end

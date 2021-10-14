@@ -48,7 +48,7 @@ function updateTweening(dt)
 end
 
  
-function newTween(pTarget, pKey, pStartValue, pEndValue, pDuration, pType)
+function newTween(pTarget, pKey, pStartValue, pEndValue, pDuration, pType, pDelay)
     local tween = {}
 
     tween.target = pTarget 
@@ -57,12 +57,19 @@ function newTween(pTarget, pKey, pStartValue, pEndValue, pDuration, pType)
     tween.endValue = pEndValue - pStartValue
     tween.duration = pDuration
     tween.type = pType
+    tween.delay = pDelay or 0
     
     tween.time = 0
     tween.onFinsish = nil
     tween.remove = false
 
     tween.update = function(dt)
+        
+        if tween.delay > 0 then
+            tween.delay = tween.delay - dt
+            return
+        end
+
         if tween.time <= tween.duration then
             tween.time = tween.time + dt
             local value = tween[tween.type](tween.time,tween.startValue,tween.endValue,tween.duration)
