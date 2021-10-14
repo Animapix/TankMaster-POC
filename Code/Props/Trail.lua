@@ -5,6 +5,7 @@ function newTrail(pX,pY,pLayer)
 
     trail.previousPosition = trail.getRelativePosition()
     trail.distance = 0
+    trail.size = 500
     trail.stepSize = 5
     trail.marks = {}
 
@@ -19,8 +20,8 @@ function newTrail(pX,pY,pLayer)
         for i= #trail.marks, 1, -1 do
             local mark = trail.marks[i]
             mark.distance = mark.distance + distance
-            mark.opacity = 1 - mark.distance/500
-            if mark.distance >= 500 then
+            mark.opacity = 1 - mark.distance/trail.size
+            if mark.distance >= trail.size then
                 mark.remove = true
                 table.remove(trail.marks,i)
             end
