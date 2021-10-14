@@ -10,6 +10,11 @@ function newEnemy(pX,pY,pTarget, pBounds)
     enemy.propeller3 = newSprite(-8.25,8.25,love.graphics.newImage("Assets/Images/Drone/PropellerR.png"))
     enemy.propeller4 = newSprite(8.25,8.25,love.graphics.newImage("Assets/Images/Drone/PropellerL.png"))
 
+    enemy.propeller1.rotation = math.rad(love.math.random(0,360))
+    enemy.propeller2.rotation = math.rad(love.math.random(0,360))
+    enemy.propeller3.rotation = math.rad(love.math.random(0,360))
+    enemy.propeller4.rotation = math.rad(love.math.random(0,360))
+
     enemy.addChild(enemy.propeller1)
     enemy.addChild(enemy.propeller2)
     enemy.addChild(enemy.propeller3)
@@ -49,8 +54,8 @@ function newEnemy(pX,pY,pTarget, pBounds)
         
         enemy.propeller1.rotation = enemy.propeller1.rotation + dt * 50
         enemy.propeller2.rotation = enemy.propeller2.rotation - dt * 50
-        enemy.propeller3.rotation = enemy.propeller1.rotation
-        enemy.propeller4.rotation = enemy.propeller2.rotation
+        enemy.propeller3.rotation = enemy.propeller3.rotation + dt * 50
+        enemy.propeller4.rotation = enemy.propeller4.rotation - dt * 50
 
         enemy.updatePosition(dt)
         enemy.updateChildrens(dt)
