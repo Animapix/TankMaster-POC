@@ -89,63 +89,83 @@ end
 scene.update = function(dt)
 
     if sceneState == "start" then ---------------------- Start ------------------------
-        
-        -- move tank forward to center of arena
-        if tank.position.x < bounds.x - 60 then
-            tank.moveForward(dt)
-        else
-            tank.canOutOfBounds = false
-            sceneState = "game"
-            doors.left.close()
-        end
-        scene.updateTankAim()
-
-        updateCollisions(dt)
-        updateSprites(dt)
-
-    elseif sceneState == "game" then ---------------------- Game ------------------------
-
-        scene.updateTankControls(dt)
-        scene.updateTankAim()
-        if love.mouse.isDown(2) then
-            tank.secondaryShot()
-        end
-        scene.updateEnemiesSpawn(dt)
-
-        if waves <= 0 and #getSprites("enemy") == 0 then
-            sceneState = "end"
-            doors.right.open()
-            newTween(outArrowSprite,"opacity",outArrowSprite.opacity,1.0,0.8,tweenTypes.quarticIn)
-            --outArrowSprite.visible = true
-        end
-
-        if tank.life <= 0 then
-            gameOverMenu.visible = true
-            sceneState = "pause"
-        end
-
-        updateCollisions(dt)
-        updateSprites(dt)
-
-    elseif sceneState == "pause" then ---------------------- PAUSE ------------------------
-
+        scene.updateStart(dt)
+    elseif sceneState == "game" then ---------------------- Game -----------------------
+        scene.updateGame(dt)
     elseif sceneState == "end" then ---------------------- End of round ------------------------
-
-        -- wait for tank go out to right door
-        tank.collideRightDoor = function()
-            sceneState = "goOut"
-            tank.canOutOfBounds = true
-            newTween(outArrowSprite,"opacity",outArrowSprite.opacity,0.0,0.8,tweenTypes.quarticOut)
-            --outArrowSprite.visible = false
-        end
-        scene.updateTankControls(dt)
-        scene.updateTankAim()
-        updateCollisions(dt)
-        updateSprites(dt)
-    
+        scene.updateEnd(dt)
     elseif sceneState == "goOut" then ---------------------- TANK GO OUT ------------------------
+        scene.updateGoOut(dt)
+    end
 
-        local tankAngle = math.deg(tank.rotation)%360
+    scene.updateHUD(dt) 
+    updateGUI(dt)
+    updateTweening(dt)
+    camera.update(dt,newVector(400,300))
+end
+
+scene.updateHUD = function(dt)
+    lifeBar.value = tank.life
+    pointsLabel.text = tank.score
+    wavesCounterLabel.text = waves
+    levelCounterLabel.text = level
+end
+
+scene.updateStart = function(dt)
+    -- move tank forward to center of arena
+    if tank.position.x < bounds.x - 60 then
+        tank.moveForward(dt)
+    else
+        tank.canOutOfBounds = false
+        sceneState = "game"
+        doors.left.close()
+    end
+    scene.updateTankAim()
+
+    updateCollisions(dt)
+    updateSprites(dt)
+end
+
+scene.updateGame = function(dt)
+    scene.updateTankControls(dt)
+    scene.updateTankAim()
+    if love.mouse.isDown(2) then
+        tank.secondaryShot()
+    end
+    scene.updateEnemiesSpawn(dt)
+
+    if waves <= 0 and #getSprites("enemy") == 0 then
+        sceneState = "end"
+        doors.right.open()
+        newTween(outArrowSprite,"opacity",outArrowSprite.opacity,1.0,0.8,tweenTypes.quarticIn)
+        --outArrowSprite.visible = true
+    end
+
+    if tank.life <= 0 then
+        gameOverMenu.visible = true
+        sceneState = "pause"
+    end
+
+    updateCollisions(dt)
+    updateSprites(dt)
+end
+
+scene.updateEnd = function(dt)
+    -- wait for tank go out to right door
+    tank.collideRightDoor = function()
+        sceneState = "goOut"
+        tank.canOutOfBounds = true
+        newTween(outArrowSprite,"opacity",outArrowSprite.opacity,0.0,0.8,tweenTypes.quarticOut)
+        --outArrowSprite.visible = false
+    end
+    scene.updateTankControls(dt)
+    scene.updateTankAim()
+    updateCollisions(dt)
+    updateSprites(dt)
+end
+
+scene.updateGoOut = function(dt)
+    local tankAngle = math.deg(tank.rotation)%360
         -- move forward if tank is facing the door
         if tankAngle < 45 or tankAngle > 315 then
             tank.moveForward(dt)
@@ -171,22 +191,7 @@ scene.update = function(dt)
         end
         updateCollisions(dt)
         updateSprites(dt)
-
-    end
-
-
-    -- Update GUI
-    lifeBar.value = tank.life
-    pointsLabel.text = tank.score
-    wavesCounterLabel.text = waves
-    levelCounterLabel.text = level
-    
-    
-    updateGUI(dt)
-    updateTweening(dt)
-    camera.update(dt,newVector(400,300))
 end
-
 
 
 scene.updateEnemiesSpawn = function(dt)
