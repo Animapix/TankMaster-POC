@@ -31,6 +31,9 @@ local outArrowSprite
 local music
 
 scene.load = function()
+    
+    scene.canvas = love.graphics.newCanvas(love.graphics.getDimensions())
+
 
     addNewSpritesLayer("floor")
     addNewSpritesLayer("shadows")
@@ -53,7 +56,6 @@ scene.load = function()
     newSprite(bounds.x,bounds.y,love.graphics.newImage("Assets/PlaceHolders/Walls.png"), "walls")
     newSprite(bounds.x,bounds.y,love.graphics.newImage("Assets/Images/Arena/Doors bottom.png"), "walls")
     newSprite(bounds.x,bounds.y,love.graphics.newImage("Assets/Images/Arena/Doors top.png"), "topWalls")
-
 
     doors.top = newDoors(bounds.x,bounds.y - bounds.height / 2 - 5.5, 0)
     doors.bottom = newDoors(bounds.x,bounds.y + bounds.height / 2 + 5.5, 180)
@@ -79,7 +81,7 @@ scene.load = function()
     music:setVolume(0.1 * musicsLevel)
     music:play()
 
-    
+    newTween(scene,"opacity",0,1,0.5,tweenTypes.sinusoidalOut)
 end
 
 scene.update = function(dt)
@@ -263,21 +265,20 @@ scene.updateTankControls = function(dt)
 end
 
 scene.draw = function()
+    love.graphics.setCanvas(scene.canvas)
 
-    love.graphics.push()
-    love.graphics.translate(camera.x,camera.y)
+        love.graphics.push()
+            love.graphics.translate(camera.x,camera.y)
+            drawSprites()
+        love.graphics.pop()
+        drawGUI()
 
+    love.graphics.setCanvas()
 
-    drawSprites()
-
-    love.graphics.setColor(0,1,0)
-    --love.graphics.rectangle("line", bounds.x - bounds.width/2, bounds.y - bounds.height/2, bounds.width, bounds.height)
-    --drawColliders()
-    love.graphics.setColor(1,1,1)
+    love.graphics.setColor(1,1,1,scene.opacity)
+    love.graphics.draw(scene.canvas, 0, 0, 0, 0.5, 0.5)
+    love.graphics.setColor(1,1,1,1)
     
-    love.graphics.pop()
-
-    drawGUI()
 end
 
 scene.mousePressed = function(pX,pY,pBtn)

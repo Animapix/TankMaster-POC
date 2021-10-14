@@ -25,6 +25,8 @@ end
 
 newScene = function(pLabel)
     local scene = {}
+    scene.canvas = nil
+    scene.opacity = 0
 
     scene.load = function()
     end
