@@ -270,7 +270,7 @@ scene.draw = function()
     love.graphics.setCanvas(scene.canvas)
 
         love.graphics.push()
-            love.graphics.translate(camera.x,camera.y)
+            love.graphics.translate(math.floor(camera.x),math.floor(camera.y))
             drawSprites()
         love.graphics.pop()
         drawGUI()
