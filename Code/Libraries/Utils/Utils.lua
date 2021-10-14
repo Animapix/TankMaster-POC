@@ -56,3 +56,23 @@ end
 function randomFact(val,fac)
     return val - (val * fac) + (love.math.random()  * val * fac)*2
 end
+
+
+function setValue (table, path, value)
+    local t = table
+    for w, d in string.gfind(path, "([%w_]+)(.?)") do
+        if d == "." then
+            t = t[w]
+        else
+            t[w] = value
+        end
+    end
+end
+
+function getValue (table, path)
+    local v = table
+    for w in string.gfind(path, "[%w_]+") do
+        v = v[w]
+    end
+    return v
+end

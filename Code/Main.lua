@@ -3,6 +3,7 @@ require("Libraries.GUIController")
 require("Libraries.ScenesController")
 require("Libraries.CollisionsController")
 require("Libraries.SpritesController")
+require("Libraries.Tweening")
 
 require("Scenes.MenuScene")
 require("Scenes.GameScene")
@@ -16,7 +17,7 @@ musicsLevel = 0.1
 function love.load()
     love.window.setMode(1600,900,{ resizable = false, vsync = true, centered = true})
     love.window.setTitle("TankMaster")
-    changeScene("game")
+    changeScene("test")
 end
 
 function love.update(dt)
