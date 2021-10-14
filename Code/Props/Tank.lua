@@ -37,6 +37,10 @@ function newTank(pX,pY,pBounds)
     tank.turret = newSprite(0,0,love.graphics.newImage("Assets/Images/Tank/turret.png"))
     tank.addChild(tank.turret)
 
+    tank.trailL = newTrail(0,12,"trails")
+    tank.addChild(tank.trailL)
+    tank.trailR = newTrail(0,-12,"trails")
+    tank.addChild(tank.trailR)
     
 
     tank.turret.barrel = newSpriteNode(32,0)

@@ -1,5 +1,6 @@
 require("Props.Doors")
 require("Props.Tank")
+require("Props.Trail")
 require("Props.Enemy")
 require("Props.Gem")
 
@@ -36,6 +37,7 @@ scene.load = function()
 
 
     addNewSpritesLayer("floor")
+    addNewSpritesLayer("trails")
     addNewSpritesLayer("shadows")
     addNewSpritesLayer("doors")
     addNewSpritesLayer("walls")
