@@ -1,8 +1,21 @@
 local shotSound = love.audio.newSource("Assets/Sounds/Explosion_Far.wav", "static") 
 
 function newEnemy(pX,pY,pTarget, pBounds)
-    local enemy = newSprite(pX, pY,love.graphics.newImage("Assets/PlaceHolders/Drone.png"), "enemies")
+    local enemy = newSpriteNode(pX, pY,"enemies")
     enemy.collider = newCircleCollider(pX,pY,8,"enemy",enemy)
+
+    enemy.chassis = newSprite(0,0,love.graphics.newImage("Assets/Images/Drone/Drone.png"))
+    enemy.propeller1 = newSprite(-8.25,-8.25,love.graphics.newImage("Assets/Images/Drone/PropellerR.png"))
+    enemy.propeller2 = newSprite(8.25,-8.25,love.graphics.newImage("Assets/Images/Drone/PropellerL.png"))
+    enemy.propeller3 = newSprite(-8.25,8.25,love.graphics.newImage("Assets/Images/Drone/PropellerR.png"))
+    enemy.propeller4 = newSprite(8.25,8.25,love.graphics.newImage("Assets/Images/Drone/PropellerL.png"))
+
+    enemy.addChild(enemy.propeller1)
+    enemy.addChild(enemy.propeller2)
+    enemy.addChild(enemy.propeller3)
+    enemy.addChild(enemy.propeller4)
+
+    enemy.addChild(enemy.chassis)
 
     enemy.tag = "enemy"
     enemy.target = pTarget
@@ -34,6 +47,11 @@ function newEnemy(pX,pY,pTarget, pBounds)
             enemy.isOutOfBounds(enemy.bounds)
         end
         
+        enemy.propeller1.rotation = enemy.propeller1.rotation + dt * 50
+        enemy.propeller2.rotation = enemy.propeller2.rotation - dt * 50
+        enemy.propeller3.rotation = enemy.propeller1.rotation
+        enemy.propeller4.rotation = enemy.propeller2.rotation
+
         enemy.updatePosition(dt)
         enemy.updateChildrens(dt)
     end
