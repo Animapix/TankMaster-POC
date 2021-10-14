@@ -1,6 +1,7 @@
 require("Props.Doors")
 require("Props.Tank")
 require("Props.Enemy")
+require("Props.Gem")
 
 require("Props.HUD.LifeBar")
 
@@ -19,7 +20,7 @@ local spawnTimer = 1
 local pauseMenu
 local gameOverMenu
 local lifeBar
-local enemiesCounterLabel
+local pointsLabel
 local wavesCounterLabel
 local levelCounterLabel
 
@@ -33,6 +34,7 @@ scene.load = function()
     addNewSpritesLayer("shadows")
     addNewSpritesLayer("doors")
     addNewSpritesLayer("walls")
+    addNewSpritesLayer("gems")
     addNewSpritesLayer("tank")
     addNewSpritesLayer("enemies")
     addNewSpritesLayer("bullets")
@@ -169,7 +171,7 @@ scene.update = function(dt)
 
     -- Update GUI
     lifeBar.value = tank.life
-    enemiesCounterLabel.text = #getSprites("enemy")
+    pointsLabel.text = tank.score
     wavesCounterLabel.text = waves
     levelCounterLabel.text = level
     
@@ -299,9 +301,9 @@ scene.setupHUD = function()
     lifeBar = newLifeBar(0,-50,300,20,500)
     panel.addChild(lifeBar)
 
-    enemiesCounterLabel = newLabel(200,-45,100,20,"0",font)
-    enemiesCounterLabel.color = { 1,1,1,0.7 }
-    panel.addChild(enemiesCounterLabel)
+    pointsLabel = newLabel(200,-45,100,20,"0",font)
+    pointsLabel.color = { 1,1,1,0.7 }
+    panel.addChild(pointsLabel)
 
     wavesCounterLabel = newLabel(550,-45,100,20,"0",font)
     wavesCounterLabel.color = { 1,1,1,0.7 }
@@ -323,7 +325,7 @@ scene.setupHUD = function()
     addControl(panel)
 
     newTween(lifeBar,"y",lifeBar.y,0,0.8,tweenTypes.quarticOut)
-    newTween(enemiesCounterLabel,"y",enemiesCounterLabel.y,5,0.8,tweenTypes.quarticOut,0.1)
+    newTween(pointsLabel,"y",pointsLabel.y,5,0.8,tweenTypes.quarticOut,0.1)
     newTween(wavesCounterLabel,"y",wavesCounterLabel.y,5,0.8,tweenTypes.quarticOut,0.2)
     newTween(wavesLabel,"y",wavesLabel.y,5,0.8,tweenTypes.quarticOut,0.3)
     

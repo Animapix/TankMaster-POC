@@ -63,6 +63,8 @@ function newTank(pX,pY,pBounds)
     tank.invincibleTimer = 0
     tank.invincibleDuration = 0.1
 
+    tank.score = 0
+
     tank.update = function(dt)
 
         -- shots timer update
@@ -117,6 +119,10 @@ function newTank(pX,pY,pBounds)
         tank.velocity = newVector()
         tank.rotation = 0
         tank.collideRightDoor = nil
+    end
+
+    tank.addToScore = function(amount)
+        tank.score = tank.score + amount
     end
 
     tank.moveForward = function(dt)
