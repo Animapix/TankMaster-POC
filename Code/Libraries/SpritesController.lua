@@ -169,11 +169,9 @@ newSprite = function(pX, pY, pImage, pLayer)
     sprite.removeAtEnd = false
 
     sprite.draw = function()
-        if sprite.parent ~= nil then
-            love.graphics.setColor(1,1,1,sprite.parent.opacity)
-        else
+
+
             love.graphics.setColor(1,1,1,sprite.opacity)
-        end
         if not sprite.visible then return end
         if sprite.image == nil then return end
 

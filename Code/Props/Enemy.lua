@@ -4,6 +4,10 @@ function newEnemy(pX,pY,pTarget, pBounds)
     local enemy = newSpriteNode(pX, pY,"enemies")
     enemy.collider = newCircleCollider(pX,pY,8,"enemy",enemy)
 
+    enemy.shadow = newSprite(0,0,love.graphics.newImage("Assets/Images/Drone/Shadow.png"))
+    enemy.shadow.opacity = 0.2
+    enemy.addChild(enemy.shadow)
+
     enemy.chassis = newSprite(0,0,love.graphics.newImage("Assets/Images/Drone/Drone.png"))
     enemy.propeller1 = newSprite(-8.25,-8.25,love.graphics.newImage("Assets/Images/Drone/PropellerR.png"))
     enemy.propeller2 = newSprite(8.25,-8.25,love.graphics.newImage("Assets/Images/Drone/PropellerL.png"))
@@ -65,6 +69,7 @@ function newEnemy(pX,pY,pTarget, pBounds)
         enemy.life = enemy.life - amount
         if enemy.life <= 0 then
             enemy.remove = true
+            enemy.shadow.remove = true
             enemy.collider.remove = true
             local expl = newSprite(enemy.position.x,enemy.position.y,love.graphics.newImage("Assets/Images/Explosions/Explosion_1.png"),"bullets")
             expl.splitH = 8
