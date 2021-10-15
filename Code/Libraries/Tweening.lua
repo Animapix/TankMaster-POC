@@ -47,6 +47,12 @@ function updateTweening(dt)
     end
 end
 
+function stopTweens()
+    for i=#tweens, 1, -1 do
+        table.remove(tweens,i)
+    end
+end
+
  
 function newTween(pTarget, pKey, pStartValue, pEndValue, pDuration, pType, pDelay)
     local tween = {}
