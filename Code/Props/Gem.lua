@@ -2,8 +2,9 @@ local gemImage = love.graphics.newImage("Assets/Images/Divers/Gem.png")
 local notificationSound = love.audio.newSource("Assets/Sounds/retro-notification.wav", "static") 
 
 function newGem(pX,pY)
-    
+
     local gem = newSprite(pX,pY,gemImage, "gems")
+    gem.tag = "gem"
     gem.splitH = 4
     gem.frameRate = 10
     gem.collider = newCircleCollider(0,0,100,"gem")

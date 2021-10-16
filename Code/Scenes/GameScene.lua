@@ -10,7 +10,6 @@ require("Props.GUI.PauseMenu")
 require("Props.GUI.GameOverMenu")
 require("Props.GUI.HUD")
 
-
 local scene = newScene("game")
 local camera = require("Libraries.Utils.Camera")
 
@@ -168,6 +167,13 @@ scene.updateEnd = function(dt)
         tank.canOutOfBounds = true
         newTween(outArrowSprite,"opacity",outArrowSprite.opacity,0.0,0.8,tweenTypes.quarticOut)
         --outArrowSprite.visible = false
+        
+        local gems = getSprites("gem")
+        for __,gem in ipairs(gems) do
+            gem.remove = true
+            gem.collider.remove = true
+        end
+
     end
     scene.updateTankControls(dt)
     scene.updateTankAim()
