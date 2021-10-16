@@ -199,6 +199,12 @@ function newLabel(pX,pY,pWidth,pHeight,pText,pFont,pAlignH,pAlignV)
         label.drawLabel()
         label.drawChildrens()
     end
+    
+    label.setText = function(value)
+        label.text = value
+        label.textWidth = pFont:getWidth(label.text)
+        label.textHeight = pFont:getHeight(label.text)
+    end
 
     return label
 end
