@@ -4,7 +4,12 @@ require("Props.Trail")
 require("Props.Enemy")
 require("Props.Gem")
 
-require("Props.HUD.LifeBar")
+require("Props.GUI.LifeBar")
+require("Props.GUI.ScoreLabel")
+require("Props.GUI.PauseMenu")
+require("Props.GUI.GameOverMenu")
+require("Props.GUI.HUD")
+
 
 local scene = newScene("game")
 local camera = require("Libraries.Utils.Camera")
@@ -22,19 +27,13 @@ local spawnTimer = 1
 -- Gui controls
 local pauseMenu
 local gameOverMenu
-local lifeBar
-local pointsLabel
-local wavesCounterLabel
-local levelCounterLabel
+local HUD
 
 local outArrowSprite
 
 local music
 
 scene.load = function()
-    
-    scene.canvas = love.graphics.newCanvas(love.graphics.getDimensions())
-
 
     addNewSpritesLayer("floor")
     addNewSpritesLayer("trails")
@@ -70,9 +69,23 @@ scene.load = function()
     sceneState = "start"
 
     --Setup GUI
-    pauseMenu = scene.setupPauseMenu()
-    gameOverMenu = scene.setupGameOverMenu()
-    scene.setupHUD()
+    HUD = newHUD()
+
+    pauseMenu = newPauseMenu()
+    pauseMenu.onResumeBtnPressed = function()
+        sceneState = "game"
+        pauseMenu.hide()
+    end
+    pauseMenu.onMainMenuBtnPressed = function()
+        pauseMenu.hide()
+        scene.fadeOut("menu")
+    end
+
+    gameOverMenu = newGameOverMenu()
+    gameOverMenu.onMainMenuBtnPressed = function()
+        gameOverMenu.hide()
+        scene.fadeOut("menu")
+    end
 
     level = 1
     waves = 5
@@ -105,10 +118,8 @@ scene.update = function(dt)
 end
 
 scene.updateHUD = function(dt)
-    lifeBar.value = tank.life
-    pointsLabel.text = tank.score
-    wavesCounterLabel.text = waves
-    levelCounterLabel.text = level
+    HUD.lifeBar.value = tank.life
+    HUD.pointsLabel.setScore(tank.score)
 end
 
 scene.updateStart = function(dt)
@@ -142,8 +153,8 @@ scene.updateGame = function(dt)
     end
 
     if tank.life <= 0 then
-        gameOverMenu.visible = true
         sceneState = "pause"
+        gameOverMenu.show()
     end
 
     updateCollisions(dt)
@@ -193,7 +204,6 @@ scene.updateGoOut = function(dt)
         updateSprites(dt)
 end
 
-
 scene.updateEnemiesSpawn = function(dt)
     if waves <= 0  then
         return
@@ -202,7 +212,7 @@ scene.updateEnemiesSpawn = function(dt)
     if spawnTimer > 0 then return end
     spawnTimer = 5
 
-    local amountOfEnemies = level * 10
+    local amountOfEnemies = level * 5
 
     waves = waves - 1
     
@@ -272,6 +282,7 @@ scene.updateTankControls = function(dt)
 end
 
 scene.draw = function()
+    scene.canvas = love.graphics.newCanvas(love.graphics.getDimensions())
     love.graphics.setCanvas(scene.canvas)
 
         love.graphics.push()
@@ -296,11 +307,11 @@ end
 
 scene.keyPressed = function(pKey)
     if pKey == "escape" and sceneState == "game" then
+        pauseMenu.show()
         sceneState = "pause"
-        pauseMenu.visible = true
     elseif pKey == "escape" and sceneState == "pause" then
+        pauseMenu.hide()
         sceneState = "game"
-        pauseMenu.visible = false
     end
 end
 
@@ -311,99 +322,9 @@ scene.unload = function()
     music:stop()
 end
 
-scene.setupHUD = function()
-    local font = love.graphics.newFont("Assets/Fonts/retro_computer_personal_use.ttf", 14)
-
-    local panel = newControl(0,0)
-
-    lifeBar = newLifeBar(0,-50,300,20,500)
-    panel.addChild(lifeBar)
-
-    pointsLabel = newLabel(200,-45,100,20,"0",font)
-    pointsLabel.color = { 1,1,1,0.7 }
-    panel.addChild(pointsLabel)
-
-    wavesCounterLabel = newLabel(550,-45,100,20,"0",font)
-    wavesCounterLabel.color = { 1,1,1,0.7 }
-    panel.addChild(wavesCounterLabel)
-    
-    local wavesLabel = newLabel(500,-45,100,20,"Waves",font)
-    wavesLabel.color = { 1,1,1,0.7 }
-    panel.addChild(wavesLabel)
-
-    levelCounterLabel = newLabel(700,-45,100,20,level,font)
-    levelCounterLabel.color = { 1,1,1,0.7 }
-    panel.addChild(levelCounterLabel)
-
-    local levelLabel = newLabel(650,-45,100,20,"Level",font)
-    levelLabel.color = { 1,1,1,0.7 }
-    panel.addChild(levelLabel)
-
-    panel.visible = true
-    addControl(panel)
-
-    newTween(lifeBar,"y",lifeBar.y,0,0.8,tweenTypes.quarticOut)
-    newTween(pointsLabel,"y",pointsLabel.y,5,0.8,tweenTypes.quarticOut,0.1)
-    newTween(wavesCounterLabel,"y",wavesCounterLabel.y,5,0.8,tweenTypes.quarticOut,0.2)
-    newTween(wavesLabel,"y",wavesLabel.y,5,0.8,tweenTypes.quarticOut,0.3)
-    
-    newTween(levelCounterLabel,"y",levelCounterLabel.y,5,0.8,tweenTypes.quarticOut,0.4)
-    newTween(levelLabel,"y",levelLabel.y,5,0.8,tweenTypes.quarticOut,0.5)
-
-    return panel
-end
-
-scene.setupPauseMenu = function()
-    local font = love.graphics.newFont("Assets/Fonts/kenvector_future_thin.ttf", 12)
-
-    local panel = newPanel(300,150,200,150)
-
-    local label = newLabel(0,0,200,20,"PAUSE",font)
-    label.color = { 1,1,1,0.7 }
-    panel.addChild(label)
-
-    local buttonResume = newButton(50,50,100,15,"RESUME",font)
-    buttonResume.setEvent("pressed", function(pState)
-        if pState == "end" then
-            pauseMenu.visible = false
-            sceneState = "game"
-        end
-    end )
-    panel.addChild(buttonResume)
-
-    local buttonMenu = newButton(50,100,100,15,"MENU",font)
-    buttonMenu.setEvent("pressed", function(pState)
-        if pState == "end" then
-            changeScene("menu")
-        end
-    end )
-    panel.addChild(buttonMenu)
-
-    panel.visible = false
-    addControl(panel)
-
-    return panel
-end
-
-scene.setupGameOverMenu = function()
-    local font = love.graphics.newFont("Assets/Fonts/kenvector_future_thin.ttf", 12)
-
-    local panel = newPanel(300,150,200,150)
-
-    local label = newLabel(0,0,200,20,"GAME OVER",font)
-    label.color = { 1,1,1,0.7 }
-    panel.addChild(label)
-
-    local buttonMenu = newButton(50,100,100,15,"MENU",font)
-    buttonMenu.setEvent("pressed", function(pState)
-        if pState == "end" then
-            changeScene("menu")
-        end
-    end )
-    panel.addChild(buttonMenu)
-
-    panel.visible = false
-    addControl(panel)
-
-    return panel
+scene.fadeOut = function(next)
+    local tween = newTween(scene,"opacity",1.0,0,0.5,tweenTypes.sinusoidalIn)
+    tween.onFinsish = function()
+        changeScene(next)
+    end
 end
