@@ -304,14 +304,20 @@ scene.draw = function()
             love.graphics.translate(math.floor(camera.x),math.floor(camera.y))
             drawSprites()
         love.graphics.pop()
-        
-        
+
     love.graphics.setCanvas()
+
+
+    local guiCanvas = love.graphics.newCanvas(love.graphics.getDimensions())
+    love.graphics.setCanvas(guiCanvas)
+    drawGUI()
+    love.graphics.setCanvas()
+
 
     love.graphics.setColor(1,1,1,scene.opacity)
     love.graphics.draw(scene.canvas, scene.canvasPosition.x, 0, 0, 0.5, 0.5)
     love.graphics.draw(scene.canvas, scene.canvasPosition.x + scene.canvas:getWidth()/2, 0, 0, 0.5, 0.5)
-    drawGUI()
+    love.graphics.draw(guiCanvas,0, 0, 0, 0.5, 0.5)
     love.graphics.setColor(1,1,1,1)
     
 end
