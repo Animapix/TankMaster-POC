@@ -209,6 +209,10 @@ scene.updateGoOut = function(dt)
             doors.right.close()
 
             local tween = newTween(scene,"canvasPosition.x",0,-scene.canvas:getWidth()/2,0.7,tweenTypes.quarticInOut)
+            --Play sound
+            local wooshSound = love.audio.newSource("Assets/Sounds/Power_Wooshes.wav", "static") 
+            wooshSound:setVolume(0.4 * soundsLevel)
+            wooshSound:play()
             tween.onFinsish = function()
                 doors.left.open()
                 sceneState = "start"

@@ -1,3 +1,6 @@
+local sound = love.audio.newSource("Assets/Sounds/DoorMove.wav", "stream")
+
+
 function newDoors(pX,pY, pAngle)
     local doors = newSpriteNode(pX,pY,"doors")
     doors.left = newSprite(0,0,love.graphics.newImage("Assets/Images/Arena/Door left.png"))
@@ -12,6 +15,8 @@ function newDoors(pX,pY, pAngle)
 
     doors.closeTimer = 0
     doors.isDelayed = false
+
+    sound:setVolume(0.1 * soundsLevel)
 
     doors.update = function(dt)
         
@@ -55,14 +60,20 @@ function newDoors(pX,pY, pAngle)
         --love.graphics.rectangle("line", pos.x/2,pos.y/2,size,size)
     end
 
+    
+
     doors.open = function()
         doors.move = 1
         doors.isOpen = true
+        sound:stop()
+        sound:play()
     end
 
     doors.close = function()
         doors.move = -1
         doors.isOpen = false
+        sound:stop()
+        sound:play()
     end
 
     doors.closeWithDelay = function(delay)

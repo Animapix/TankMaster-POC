@@ -11,7 +11,7 @@ require("Scenes.TestScene")
 
 love.graphics.setDefaultFilter("nearest")
 
-soundsLevel = 0.0
+soundsLevel = 0.5
 musicsLevel = 0.0
 
 function love.load()
