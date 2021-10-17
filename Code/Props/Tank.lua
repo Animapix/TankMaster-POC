@@ -160,7 +160,7 @@ function newTank(pX,pY,pBounds)
             return
         end
         tank.invincibleTimer = tank.invincibleDuration
-        
+        tank.startBlinking(tank.invincibleDuration, 0.1)
         tank.life = tank.life - amount
         if tank.life <= 0 then
             tank.tracksSound:stop()

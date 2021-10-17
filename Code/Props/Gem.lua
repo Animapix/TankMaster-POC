@@ -15,6 +15,7 @@ function newGem(pX,pY)
     gem.lifeTime = 5
 
     notificationSound:setVolume(0.3 * soundsLevel)
+    gem.startBlinking(2,0.1,3)
 
     gem.update = function(dt)
         

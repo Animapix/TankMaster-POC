@@ -1,19 +1,19 @@
 
 local scene = newScene("test")
 local sprite
+local sprite2
 
 scene.load = function()
     addNewSpritesLayer("sprite")
     sprite = newSprite(100,225,love.graphics.newImage("Assets/Images/Tank/Chassis.png"),"sprite")
-    newTween(sprite,"position.x",100,400,3.0,tweenTypes.sinusoidalOut)
-
+    sprite2 = newSprite(200,225,love.graphics.newImage("Assets/Images/Tank/Chassis.png"),"sprite")
+    sprite.blinking = true
 end
 
 
 
 scene.update = function(dt)
     updateSprites(dt)
-    updateTweening(dt)
 end
 
 scene.draw = function()

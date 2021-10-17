@@ -1,6 +1,17 @@
 local layers = {}
 local spritesCounter = 0
 
+shader = love.graphics.newShader[[
+extern float WhiteFactor;
+
+vec4 effect(vec4 vcolor, Image tex, vec2 texcoord, vec2 pixcoord)
+{
+    vec4 outputcolor = Texel(tex, texcoord) * vcolor;
+    outputcolor.rgb += vec3(WhiteFactor);
+    return outputcolor;
+}
+]]
+
 addNewSpritesLayer = function(pName, pModulate, pBlend)
     table.insert(layers, {
         name = pName,
@@ -16,6 +27,7 @@ updateSprites = function(dt)
         for __,sprite in ipairs(layer.sprites) do
             spritesCounter = spritesCounter + 1
             sprite.update(dt)
+            sprite.blinking.update(dt)
         end
 
         for i = #layer.sprites, 1, -1 do
@@ -32,7 +44,13 @@ drawSprites = function()
         love.graphics.setColor(layer.modulate)
         love.graphics.setBlendMode(layer.blend[1], layer.blend[2])
         for __,sprite in ipairs(layer.sprites) do
+            
+            love.graphics.setShader(shader)
+            shader:send("WhiteFactor", sprite.blinking.whiteFactor)
+            
             sprite.draw()
+            
+            love.graphics.setShader()
         end
         love.graphics.setColor(1,1,1)
         love.graphics.setBlendMode("alpha")
@@ -82,6 +100,37 @@ newSpriteNode = function(pX, pY, pLayer)
     node.opacity = 1
     node.visible = true
 
+    node.blinking = {}
+    node.blinking.run = true
+    node.blinking.rate = 0
+    node.blinking.timer = 0
+    node.blinking.whiteFactor = 0.0
+    node.blinking.update = function(dt) end
+    node.blinking.delay = 0
+
+    node.startBlinking = function(time, rate, delay)
+        node.blinking.run = true
+        node.blinking.rate = rate
+        node.blinking.timer = time
+        node.blinking.delay = delay or 0
+        node.blinking.whiteFactor = 0.0
+        node.blinking.update = function(dt)
+            if node.blinking.delay > 0 then
+                node.blinking.delay = node.blinking.delay - dt
+                return
+            end
+
+            if node.blinking.run then
+                node.blinking.timer = node.blinking.timer - dt
+                node.blinking.whiteFactor = (node.blinking.timer %node.blinking.rate) / node.blinking.rate
+                if node.blinking.timer <= 0 then
+                    node.blinking.run = false
+                    node.blinking.whiteFactor = 0.0
+                end
+            end
+        end
+    end
+
     node.addChild = function(pChild)
         pChild.parent = node
         table.insert(node.childrens,pChild)
@@ -116,6 +165,7 @@ newSpriteNode = function(pX, pY, pLayer)
         love.graphics.circle("fill", node.getRelativeX(), node.getRelativeY(), 1)
         love.graphics.setColor(1,1,1,1)
         node.drawChildrens()
+
     end
 
     node.drawChildrens = function()
@@ -171,7 +221,7 @@ newSprite = function(pX, pY, pImage, pLayer)
     sprite.draw = function()
 
 
-            love.graphics.setColor(1,1,1,sprite.opacity)
+        love.graphics.setColor(1,1,1,sprite.opacity)
         if not sprite.visible then return end
         if sprite.image == nil then return end
 
