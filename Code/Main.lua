@@ -11,8 +11,8 @@ require("Scenes.TestScene")
 
 love.graphics.setDefaultFilter("nearest")
 
-soundsLevel = 0.2
-musicsLevel = 0.1
+soundsLevel = 0.0
+musicsLevel = 0.0
 
 function love.load()
     love.window.setMode(1600,900,{ resizable = false, vsync = true, centered = true})

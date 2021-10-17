@@ -78,7 +78,7 @@ function newEnemy(pX,pY,pTarget, pBounds)
             expl.removeAtEnd = true
             --Play sound
             shotSound:stop()
-            shotSound:setVolume(0.2)
+            shotSound:setVolume(0.2 * soundsLevel)
             shotSound:play()
             require("Libraries.Utils.Camera").startShake(0.1,20)
             newGem(enemy.position.x,enemy.position.y)

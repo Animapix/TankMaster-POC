@@ -56,7 +56,7 @@ function newExplosiveBullet(pFirePosition, pDirection, pSpeed, pBounds, pTargetT
             newExplosion(bullet.position.x,bullet.position.y,nil,0.2,10,50,bullet.targetTag, "bullets")
             --Play sound
             shotSound:stop()
-            shotSound:setVolume(0.1)
+            shotSound:setVolume(0.1 * soundsLevel)
             shotSound:play()
         end
     end
@@ -73,7 +73,7 @@ function newExplosiveBullet(pFirePosition, pDirection, pSpeed, pBounds, pTargetT
             newExplosion(bullet.position.x,bullet.position.y,nil,0.2,10,50,bullet.targetTag, "bullets")
             --Play sound
             shotSound:stop()
-            shotSound:setVolume(0.1)
+            shotSound:setVolume(0.1 * soundsLevel)
             shotSound:play()
         end
     end

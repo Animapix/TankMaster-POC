@@ -172,7 +172,7 @@ function newTank(pX,pY,pBounds)
         if tank.bulletTimer == 0 then
             --Play sound
             shotSound:stop()
-            shotSound:setVolume(0.1)
+            shotSound:setVolume(0.1 * soundsLevel)
             shotSound:play()
             local direction = newVector(math.cos(tank.turret.getRelativeRotation()),math.sin(tank.turret.getRelativeRotation()))
             local bullet = newExplosiveBullet(tank.turret.barrel.getRelativePosition(), direction, 800, tank.bounds, "enemy")
