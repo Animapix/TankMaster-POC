@@ -47,6 +47,8 @@ scene.load = function()
     addNewSpritesLayer("topWalls")
 
     bounds = { x = 400, y = 225 , width = 740 , height = 390 }
+    scene.canvasPosition = newVector()
+
 
     newRectangleCollider(bounds.x + bounds.width/2 + 10, bounds.y, 20, 100, "door")
     
@@ -197,14 +199,21 @@ scene.updateGoOut = function(dt)
         scene.updateTankAim()
         -- reset tank when he was out of screen
         if tank.position.x > bounds.x + bounds.width / 2 + 50 then
-            tank.reset(bounds.x - bounds.width/2 - 100,bounds.y)
+
+            tank.reset(bounds.x - bounds.width/2 - 200,bounds.y)
             tank.canOutOfBounds = true
             level = level + 1 
             waves = 5
             spawnTimer = 1
-            sceneState = "start"
-            doors.left.open()
+            
             doors.right.close()
+
+            local tween = newTween(scene,"canvasPosition.x",0,-scene.canvas:getWidth()/2,0.7,tweenTypes.quarticInOut)
+            tween.onFinsish = function()
+                doors.left.open()
+                sceneState = "start"
+            end
+
         end
         updateCollisions(dt)
         updateSprites(dt)
@@ -295,12 +304,14 @@ scene.draw = function()
             love.graphics.translate(math.floor(camera.x),math.floor(camera.y))
             drawSprites()
         love.graphics.pop()
-        drawGUI()
-
+        
+        
     love.graphics.setCanvas()
 
     love.graphics.setColor(1,1,1,scene.opacity)
-    love.graphics.draw(scene.canvas, 0, 0, 0, 0.5, 0.5)
+    love.graphics.draw(scene.canvas, scene.canvasPosition.x, 0, 0, 0.5, 0.5)
+    love.graphics.draw(scene.canvas, scene.canvasPosition.x + scene.canvas:getWidth()/2, 0, 0, 0.5, 0.5)
+    drawGUI()
     love.graphics.setColor(1,1,1,1)
     
 end
