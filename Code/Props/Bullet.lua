@@ -58,6 +58,7 @@ function newExplosiveBullet(pFirePosition, pDirection, pSpeed, pBounds, pTargetT
             shotSound:stop()
             shotSound:setVolume(0.1 * soundsLevel)
             shotSound:play()
+            statsExplosivesBulletMised()
         end
     end
 
@@ -96,6 +97,7 @@ function newRifleBullet(pFirePosition, pDirection, pSpeed, pBounds, pTargetTag)
             bullet.remove = true
             bullet.collider.remove = true
             bullet.spawnSparkles()
+            statsRifleBulletMised()
         end
     end
 

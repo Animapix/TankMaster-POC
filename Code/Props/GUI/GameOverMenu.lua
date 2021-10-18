@@ -26,6 +26,15 @@ function newGameOverMenu()
     )
     menu.panel.addChild(menu.mainMenuBtn)
 
+    menu.accuracy = newLabel(80,100,320,40,"Accuracy: 0%",menu.btnFont)
+    menu.accuracy.alignH = "left"
+    menu.panel.addChild(menu.accuracy)
+
+    menu.killedEnemies = newLabel(80,120,320,40,"Enemies killed: 0",menu.btnFont)
+    menu.killedEnemies.alignH = "left"
+    menu.panel.addChild(menu.killedEnemies)
+
+
     menu.panel.visible = false
     addControl(menu.panel)
 
@@ -34,6 +43,10 @@ function newGameOverMenu()
         --sceneState = "pause"
         menu.panel.visible = true
         newTween(menu.panel,"y",menu.panel.y,75,0.8,tweenTypes.quarticOut)
+
+        menu.accuracy.setText("Accuracy: "..math.floor(getAccuracy() * 100).."%")
+        menu.killedEnemies.setText("enemies killed: "..getEnemiesKilled())
+
     end
     
     menu.hide = function()

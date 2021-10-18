@@ -9,6 +9,7 @@ require("Props.GUI.ScoreLabel")
 require("Props.GUI.PauseMenu")
 require("Props.GUI.GameOverMenu")
 require("Props.GUI.HUD")
+require("Props.Stats")
 
 local scene = newScene("game")
 local camera = require("Libraries.Utils.Camera")
@@ -302,6 +303,7 @@ end
 
 scene.draw = function()
     scene.canvas = love.graphics.newCanvas(love.graphics.getDimensions())
+    
     love.graphics.setCanvas(scene.canvas)
 
         love.graphics.push()

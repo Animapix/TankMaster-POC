@@ -178,6 +178,7 @@ function newTank(pX,pY,pBounds)
             local bullet = newExplosiveBullet(tank.turret.barrel.getRelativePosition(), direction, 800, tank.bounds, "enemy")
             tank.bulletTimer = tank.bulletRate
             require("Libraries.Utils.Camera").startShake(0.1,100)
+            statsExplosivesBulletFired()
         end
     end
 
@@ -193,6 +194,8 @@ function newTank(pX,pY,pBounds)
             local bulletRight = newRifleBullet(tank.turret.barrelRight.getRelativePosition(), direction, 1000, tank.bounds, "enemy")
             tank.rifleTimer = tank.rifleRate
             require("Libraries.Utils.Camera").startShake(0.1,10)
+            statsRifleBulletFired()
+            statsRifleBulletFired()
         end
     end
 

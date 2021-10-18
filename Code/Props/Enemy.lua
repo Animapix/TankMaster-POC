@@ -82,6 +82,7 @@ function newEnemy(pX,pY,pTarget, pBounds)
             shotSound:play()
             require("Libraries.Utils.Camera").startShake(0.1,20)
             newGem(enemy.position.x,enemy.position.y)
+            statsEnemyKilled()
         end
         --print("enemy take "..amount.." damages, enemy's life = "..enemy.life)
     end
