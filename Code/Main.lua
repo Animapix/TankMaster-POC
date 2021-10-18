@@ -17,6 +17,8 @@ musicsLevel = 0.0
 function love.load()
     love.window.setMode(1600,900,{ resizable = false, vsync = true, centered = true})
     love.window.setTitle("TankMaster")
+    love.mouse.setVisible(false)
+    love.mouse.setGrabbed(true)
     changeScene("menu")
 end
 

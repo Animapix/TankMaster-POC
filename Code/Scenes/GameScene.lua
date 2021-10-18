@@ -19,6 +19,7 @@ local tank
 local bounds
 local doors = {}
 local sceneState = "start"
+local previousGameState = sceneState
 
 local level = 1
 local waves = 5
@@ -28,7 +29,7 @@ local spawnTimer = 1
 local pauseMenu
 local gameOverMenu
 local HUD
-
+local cursor
 local outArrowSprite
 
 local music
@@ -72,10 +73,10 @@ scene.load = function()
 
     --Setup GUI
     HUD = newHUD()
-
+    cursor = love.graphics.newImage("Assets/Images/HUD/Cursor.png")
     pauseMenu = newPauseMenu()
     pauseMenu.onResumeBtnPressed = function()
-        sceneState = "game"
+        sceneState = previousGameState
         pauseMenu.hide()
     end
     pauseMenu.onMainMenuBtnPressed = function()
@@ -317,6 +318,8 @@ scene.draw = function()
     local guiCanvas = love.graphics.newCanvas(love.graphics.getDimensions())
     love.graphics.setCanvas(guiCanvas)
     drawGUI()
+    local x,y = love.graphics.inverseTransformPoint( love.mouse.getPosition())
+    love.graphics.draw(cursor, x - cursor:getWidth()/2, y - cursor:getHeight()/2 )
     love.graphics.setCanvas()
 
 
@@ -326,7 +329,7 @@ scene.draw = function()
     love.graphics.draw(guiCanvas,0, 0, 0, 0.5, 0.5)
     love.graphics.setColor(1,1,1,1)
     
-end
+end 
 
 scene.mousePressed = function(pX,pY,pBtn)
     if pBtn == 1 and sceneState == "game" then
@@ -335,12 +338,13 @@ scene.mousePressed = function(pX,pY,pBtn)
 end
 
 scene.keyPressed = function(pKey)
-    if pKey == "escape" and sceneState == "game" then
+    if pKey == "escape" and sceneState ~= "pause" then
         pauseMenu.show()
+        previousGameState = sceneState
         sceneState = "pause"
     elseif pKey == "escape" and sceneState == "pause" then
         pauseMenu.hide()
-        sceneState = "game"
+        sceneState = previousGameState
     end
 end
 

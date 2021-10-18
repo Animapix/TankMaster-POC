@@ -1,6 +1,7 @@
 require("Props.GUI.MainMenu")
 
 local scene = newScene("menu")
+local cursor
 
 scene.load = function()
     
@@ -9,7 +10,7 @@ scene.load = function()
         mainMenu.hide()
         scene.fadeOut("game")
     end
-
+    cursor = love.graphics.newImage("Assets/Images/HUD/Cursor.png")
     mainMenu.show()
     newTween(scene,"opacity",0,1,0.5,tweenTypes.sinusoidalOut)
 end
@@ -30,7 +31,8 @@ scene.draw = function()
     love.graphics.setCanvas(scene.canvas)
         
         drawGUI()
-
+        local x,y = love.graphics.inverseTransformPoint( love.mouse.getPosition())
+    love.graphics.draw(cursor, x - cursor:getWidth()/2, y - cursor:getHeight()/2 )
     love.graphics.setCanvas()
 
     love.graphics.setColor(1,1,1,scene.opacity)

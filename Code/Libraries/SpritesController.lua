@@ -156,16 +156,7 @@ newSpriteNode = function(pX, pY, pLayer)
     end
 
     node.draw = function()
-        if node.parent ~= nil then
-            love.graphics.setColor(1,1,1,node.parent.opacity)
-        else
-            love.graphics.setColor(1,1,1,node.opacity)
-        end
-        if not node.visible then return end
-        love.graphics.circle("fill", node.getRelativeX(), node.getRelativeY(), 1)
-        love.graphics.setColor(1,1,1,1)
         node.drawChildrens()
-
     end
 
     node.drawChildrens = function()
