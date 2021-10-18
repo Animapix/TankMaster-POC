@@ -176,6 +176,7 @@ function newTank(pX,pY,pBounds)
             shotSound:play()
             local direction = newVector(math.cos(tank.turret.getRelativeRotation()),math.sin(tank.turret.getRelativeRotation()))
             local bullet = newExplosiveBullet(tank.turret.barrel.getRelativePosition(), direction, 800, tank.bounds, "enemy")
+            bullet.velocity = bullet.velocity + tank.velocity
             tank.bulletTimer = tank.bulletRate
             require("Libraries.Utils.Camera").startShake(0.1,100)
             statsExplosivesBulletFired()
@@ -193,6 +194,10 @@ function newTank(pX,pY,pBounds)
             local bulletLeft = newRifleBullet(tank.turret.barrelLeft.getRelativePosition(), direction, 1000, tank.bounds, "enemy")
             local bulletRight = newRifleBullet(tank.turret.barrelRight.getRelativePosition(), direction, 1000, tank.bounds, "enemy")
             tank.rifleTimer = tank.rifleRate
+
+            bulletLeft.velocity = bulletLeft.velocity + tank.velocity
+            bulletRight.velocity = bulletRight.velocity + tank.velocity
+
             require("Libraries.Utils.Camera").startShake(0.1,10)
             statsRifleBulletFired()
             statsRifleBulletFired()
