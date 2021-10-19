@@ -66,9 +66,13 @@ function newVector(pX, pY)
         return vector
     end
 
-    vector.angle = function(v2)
-        local delta = v2 - vector;
-        return math.atan2(delta.y, delta.x);
+    function vector.angle(v2)
+        local delta = v2 - vector
+        local angle = math.atan2(delta.y, delta.x)
+        if angle < 0 then
+            angle = map(angle, -math.pi, 0, math.pi, math.pi * 2)
+        end
+        return angle
     end
 
     vector.dir = function(v)
