@@ -80,3 +80,7 @@ function getValue (table, path)
     end
     return v
 end
+
+function map(x, in_min, in_max, out_min, out_max)
+    return out_min + (x - in_min)*(out_max - out_min)/(in_max - in_min)
+end
