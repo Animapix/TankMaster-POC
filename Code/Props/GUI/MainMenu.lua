@@ -25,7 +25,7 @@ function newMainMenu()
     )
     menu.panel.addChild(menu.resumeBtn)
 
-    -- Setup Play button
+    -- Setup Quit button
     menu.quitBtn = newButton(100,175,100,15,"QUIT",menu.btnFont)
     menu.quitBtn.setEvent("pressed", function(pState)
         if pState == "end" then
