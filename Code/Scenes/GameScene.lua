@@ -59,7 +59,7 @@ scene.load = function()
     local lifePackButton = newButton(373, 100 ,0,0,"",love.graphics.newFont("Assets/Fonts/retro_computer_personal_use.ttf", 14))
     lifePackButton.setEvent("pressed", function(pState)
         if pState == "end" then
-            local price = 500 * level
+            local price = (level * level)* 0.5 * 500
             if HUD.pointsLabel.score > price and tank.life < tank.maxLife then
                 HUD.pointsLabel.subScore(price)
                 
@@ -206,7 +206,7 @@ scene.updateGame = function(dt)
         doors.right.open()
         newTween(outArrowSprite,"opacity",outArrowSprite.opacity,1.0,0.8,tweenTypes.quarticIn)
         newTween(bonusPanel,"y",bonusPanel.y,0,0.5,tweenTypes.sinusoidalOut)
-        lifePackPriceLabel.setText((level * 500).."$")
+        lifePackPriceLabel.setText(((level * level) * 0.5 * 500).."$")
     end
 
     if tank.life <= 0 then
