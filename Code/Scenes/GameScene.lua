@@ -35,7 +35,7 @@ local outArrowSprite
 local music
 
 scene.load = function()
-
+    
     addNewSpritesLayer("floor")
     addNewSpritesLayer("trails")
     addNewSpritesLayer("shadows")
@@ -50,7 +50,7 @@ scene.load = function()
 
     bounds = { x = 400, y = 225 , width = 740 , height = 390 }
     scene.canvasPosition = newVector()
-
+    love.mouse.setGrabbed(true)
 
     newRectangleCollider(bounds.x + bounds.width/2 + 10, bounds.y, 20, 100, "door")
     
@@ -78,10 +78,12 @@ scene.load = function()
     pauseMenu.onResumeBtnPressed = function()
         sceneState = previousGameState
         pauseMenu.hide()
+        love.mouse.setGrabbed(true)
     end
     pauseMenu.onMainMenuBtnPressed = function()
         pauseMenu.hide()
         scene.fadeOut("menu")
+        love.mouse.setGrabbed(true)
     end
 
     gameOverMenu = newGameOverMenu()
@@ -152,12 +154,12 @@ scene.updateGame = function(dt)
         sceneState = "end"
         doors.right.open()
         newTween(outArrowSprite,"opacity",outArrowSprite.opacity,1.0,0.8,tweenTypes.quarticIn)
-        --outArrowSprite.visible = true
     end
 
     if tank.life <= 0 then
-        sceneState = "pause"
+        sceneState = "gameOver"
         gameOverMenu.show()
+        love.mouse.setGrabbed(false)
     end
 
     updateCollisions(dt)
@@ -338,13 +340,15 @@ scene.mousePressed = function(pX,pY,pBtn)
 end
 
 scene.keyPressed = function(pKey)
-    if pKey == "escape" and sceneState ~= "pause" then
+    if pKey == "escape" and sceneState ~= "pause" and sceneState ~= "gameOver" then
         pauseMenu.show()
         previousGameState = sceneState
         sceneState = "pause"
+        love.mouse.setGrabbed(false)
     elseif pKey == "escape" and sceneState == "pause" then
         pauseMenu.hide()
         sceneState = previousGameState
+        love.mouse.setGrabbed(true)
     end
 end
 
