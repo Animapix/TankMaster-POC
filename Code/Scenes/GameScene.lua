@@ -31,6 +31,7 @@ local gameOverMenu
 local HUD
 local cursor
 local outArrowSprite
+local commandsSprite
 
 local music
 
@@ -57,6 +58,11 @@ scene.load = function()
     newSprite(bounds.x,bounds.y,love.graphics.newImage("Assets/PlaceHolders/Floor.png"), "floor")
     outArrowSprite = newSprite(bounds.x + bounds.width / 2 - 40,bounds.y,love.graphics.newImage("Assets/Images/HUD/Arrow.png"), "floor")
     outArrowSprite.opacity = 0.0
+    
+    commandsSprite = newSprite(bounds.x,bounds.y + 25,love.graphics.newImage("Assets/Images/HUD/Commands.png"), "floor")
+    commandsSprite.opacity = 0.0
+    
+    
     newSprite(bounds.x,bounds.y,love.graphics.newImage("Assets/PlaceHolders/Walls.png"), "walls")
     newSprite(bounds.x,bounds.y,love.graphics.newImage("Assets/Images/Arena/Doors bottom.png"), "walls")
     newSprite(bounds.x,bounds.y,love.graphics.newImage("Assets/Images/Arena/Doors top.png"), "topWalls")
@@ -102,6 +108,8 @@ scene.load = function()
     music:play()
 
     newTween(scene,"opacity",0,1,0.5,tweenTypes.sinusoidalOut)
+    newTween(commandsSprite,"opacity",0.0,1.0,1,tweenTypes.quarticInOut,2.0)
+    
 end
 
 scene.update = function(dt)
@@ -337,6 +345,10 @@ scene.mousePressed = function(pX,pY,pBtn)
     if pBtn == 1 and sceneState == "game" then
         tank.shot()
     end
+
+    if commandsSprite.opacity == 1.0 then
+        newTween(commandsSprite,"opacity",1.0,0.0,1,tweenTypes.quarticOut)
+    end
 end
 
 scene.keyPressed = function(pKey)
@@ -349,6 +361,10 @@ scene.keyPressed = function(pKey)
         pauseMenu.hide()
         sceneState = previousGameState
         love.mouse.setGrabbed(true)
+    end
+
+    if commandsSprite.opacity == 1.0 then
+        newTween(commandsSprite,"opacity",1.0,0.0,1,tweenTypes.quarticOut)
     end
 end
 
