@@ -55,7 +55,7 @@ scene.load = function()
     --Setup GUI
     HUD = newHUD()
     cursor = love.graphics.newImage("Assets/Images/HUD/Cursor.png")
-    bonusPanel = newControl(0,0)--200)
+    bonusPanel = newControl(0,-200)
     local lifePackButton = newButton(373, 100 ,0,0,"",love.graphics.newFont("Assets/Fonts/retro_computer_personal_use.ttf", 14))
     lifePackButton.setEvent("pressed", function(pState)
         if pState == "end" then
@@ -389,7 +389,6 @@ scene.mousePressed = function(pX,pY,pBtn)
     if pBtn == 1 and sceneState == "game" then
         tank.shot()
     end
-
     if commandsSprite.opacity == 1.0 then
         newTween(commandsSprite,"opacity",1.0,0.0,1,tweenTypes.quarticOut)
     end
@@ -401,6 +400,7 @@ scene.keyPressed = function(pKey)
         previousGameState = sceneState
         sceneState = "pause"
         love.mouse.setGrabbed(false)
+        tank.tracksSound:setVolume(0)
     elseif pKey == "escape" and sceneState == "pause" then
         pauseMenu.hide()
         sceneState = previousGameState

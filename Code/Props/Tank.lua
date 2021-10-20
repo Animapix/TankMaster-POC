@@ -2,6 +2,7 @@ require("Props.Bullet")
 
 local shotSound = love.audio.newSource("Assets/Sounds/Explosion_Fast.wav", "static") 
 local smallShotSound = love.audio.newSource("Assets/Sounds/Small_Gun_Shot.wav", "static") 
+local tracksSound = love.audio.newSource("Assets/Sounds/tracks.wav", "stream")
 
 function newTank(pX,pY,pBounds)
     local tank = newSpriteNode(pX, pY, "tank")
@@ -19,10 +20,10 @@ function newTank(pX,pY,pBounds)
 
     tank.shadow = newSprite(0,0,love.graphics.newImage("Assets/Images/Tank/Shadow.png"), "shadows")
 
-    tank.tracksSound = love.audio.newSource("Assets/Sounds/tracks.wav", "stream")
-    tank.tracksSound:setLooping( true )
-    tank.tracksSound:play()
-    tank.tracksSound:setVolume(0)
+    tank.tracksSound = tracksSound
+    tracksSound:setLooping( true )
+    tracksSound:play()
+    tracksSound:setVolume(0)
 
     tank.trackR = newSprite(0,12,love.graphics.newImage("Assets/Images/Tank/Tracks.png"))
     tank.trackR.splitV = 5
@@ -107,7 +108,7 @@ function newTank(pX,pY,pBounds)
         tank.trackR.frameRate = (tank.throttleCmd - tank.steeringCmd * 1.5) * 35
 
         --Adjust tracks sound
-        tank.tracksSound:setVolume(math.max(math.abs(tank.throttleCmd), math.abs(tank.steeringCmd)) * 0.5 * soundsLevel)
+        tracksSound:setVolume(math.max(math.abs(tank.throttleCmd), math.abs(tank.steeringCmd)) * 0.5 * soundsLevel)
 
         tank.updatePosition(dt)
         tank.updateChildrens(dt)
