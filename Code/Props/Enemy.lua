@@ -76,6 +76,17 @@ function newEnemy(pX,pY,pTarget, pBounds)
             expl.frameRate = 30
             expl.loop = false
             expl.removeAtEnd = true
+
+            local sparkleImage = love.graphics.newImage("Assets/Images/Divers/DroneParticles.png")
+            local emitter = newParticlesEmitter(enemy.position.x,enemy.position.y,sparkleImage, 0.01 ,"enemies")
+            emitter.particlesAmount = 2000
+            emitter.particleLifeTime = 0.3
+            emitter.particleLifetimeRandomF = 0.5
+            emitter.particleSpeed = 100
+            emitter.particleSpeedRandomF = 0.8
+            emitter.partickeSize = 1
+            emitter.partickeSizeRandomF = 0.5
+
             --Play sound
             shotSound:stop()
             shotSound:setVolume(0.2 * soundsLevel)

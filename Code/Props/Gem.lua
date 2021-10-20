@@ -1,5 +1,6 @@
 local gemImage = love.graphics.newImage("Assets/Images/Divers/Gem.png")
 local notificationSound = love.audio.newSource("Assets/Sounds/retro-notification.wav", "static") 
+local sparkleImage = love.graphics.newImage("Assets/Images/Divers/GemParticles.png")
 
 function newGem(pX,pY)
 
@@ -27,6 +28,7 @@ function newGem(pX,pY)
         if gem.lifeTime <= 0 then
             gem.remove = true
             gem.collider.remove = true
+            gem.removeAnimation()
         end
 
         gem.updatePosition(dt)
@@ -44,9 +46,22 @@ function newGem(pX,pY)
             gem.target.parent.addToScore(gem.amount)
             gem.collider.remove = true
             gem.remove = true
+            gem.removeAnimation()
             notificationSound:stop()
             notificationSound:play()
         end
+    end
+
+    gem.removeAnimation = function()
+        
+        local emitter = newParticlesEmitter(gem.position.x,gem.position.y,sparkleImage, 0.01 ,"particles")
+        emitter.particlesAmount = 1000
+        emitter.particleLifeTime = 0.1
+        emitter.particleLifetimeRandomF = 0.5
+        emitter.particleSpeed = 200
+        emitter.particleSpeedRandomF = 0.8
+        emitter.partickeSize = 2
+        emitter.partickeSizeRandomF = 0.2
     end
 
     return gem
