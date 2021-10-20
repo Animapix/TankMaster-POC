@@ -26,11 +26,19 @@ function newGameOverMenu()
     )
     menu.panel.addChild(menu.mainMenuBtn)
 
-    menu.accuracy = newLabel(80,100,320,40,"Accuracy: 0%",menu.btnFont)
+    menu.level = newLabel(80,80,320,40,"Level: 0",menu.btnFont)
+    menu.level.alignH = "left"
+    menu.panel.addChild(menu.level)
+
+    menu.points = newLabel(80,100,320,40,"Points: 0",menu.btnFont)
+    menu.points.alignH = "left"
+    menu.panel.addChild(menu.points)
+
+    menu.accuracy = newLabel(80,120,320,40,"Accuracy: 0%",menu.btnFont)
     menu.accuracy.alignH = "left"
     menu.panel.addChild(menu.accuracy)
 
-    menu.killedEnemies = newLabel(80,120,320,40,"Enemies killed: 0",menu.btnFont)
+    menu.killedEnemies = newLabel(80,140,320,40,"Enemies killed: 0",menu.btnFont)
     menu.killedEnemies.alignH = "left"
     menu.panel.addChild(menu.killedEnemies)
 
@@ -46,7 +54,6 @@ function newGameOverMenu()
 
         menu.accuracy.setText("Accuracy: "..math.floor(getAccuracy() * 100).."%")
         menu.killedEnemies.setText("enemies killed: "..getEnemiesKilled())
-
     end
     
     menu.hide = function()

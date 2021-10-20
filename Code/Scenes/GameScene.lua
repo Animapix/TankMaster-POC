@@ -212,6 +212,8 @@ scene.updateGame = function(dt)
     if tank.life <= 0 then
         sceneState = "gameOver"
         gameOverMenu.show()
+        gameOverMenu.points.setText("Points: "..HUD.pointsLabel.score)
+        gameOverMenu.level.setText("Level: "..level)
         love.mouse.setGrabbed(false)
     end
 
