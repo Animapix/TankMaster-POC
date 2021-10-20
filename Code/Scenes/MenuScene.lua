@@ -2,6 +2,7 @@ require("Props.GUI.MainMenu")
 
 local scene = newScene("menu")
 local cursor
+local background
 
 scene.load = function()
     
@@ -11,6 +12,7 @@ scene.load = function()
         scene.fadeOut("game")
     end
     cursor = love.graphics.newImage("Assets/Images/HUD/Cursor.png")
+    background = love.graphics.newImage("Assets/Images/Divers/Arena.png")
     mainMenu.show()
     newTween(scene,"opacity",0,1,0.5,tweenTypes.sinusoidalOut)
 end
@@ -29,7 +31,8 @@ end
 scene.draw = function()
     scene.canvas = love.graphics.newCanvas(love.graphics.getDimensions())
     love.graphics.setCanvas(scene.canvas)
-        
+        local gameWidth,gameHeight = love.graphics.inverseTransformPoint(love.graphics.getDimensions())
+        love.graphics.draw(background,-background:getWidth()/2 + gameWidth/2,-background:getHeight()/2 + gameHeight/2)
         drawGUI()
         local x,y = love.graphics.inverseTransformPoint( love.mouse.getPosition())
     love.graphics.draw(cursor, x - cursor:getWidth()/2, y - cursor:getHeight()/2 )
