@@ -1,4 +1,5 @@
 local gemImage = love.graphics.newImage("Assets/Images/Divers/Gem.png")
+local gemShadowImage = love.graphics.newImage("Assets/Images/Divers/GemShadow.png")
 local notificationSound = love.audio.newSource("Assets/Sounds/retro-notification.wav", "static") 
 local sparkleImage = love.graphics.newImage("Assets/Images/Divers/GemParticles.png")
 
@@ -13,23 +14,31 @@ function newGem(pX,pY)
     gem.isCollected = false
     gem.target = nil
     gem.amount = 150
-    gem.lifeTime = 5
+    gem.lifeTime = 6
+
+    gem.shadow = newSprite(pX,pY + 6,gemShadowImage, "shadows")
+
 
     notificationSound:setVolume(0.3 * soundsLevel)
-    gem.startBlinking(2,0.1,3)
+    gem.startBlinking(2,0.1,4)
 
     gem.update = function(dt)
         
         if gem.target ~= nil then
             gem.position = gem.position + gem.position.dir(gem.target.position) * dt * 350
+            gem.shadow.position = gem.position + newVector(0,6)
         end
 
         gem.lifeTime = gem.lifeTime - dt
         if gem.lifeTime <= 0 then
             gem.remove = true
             gem.collider.remove = true
+            gem.shadow.remove = true
             gem.removeAnimation()
         end
+        local noise = math.sin(gem.lifeTime * 10) / 10
+        gem.position.y = gem.position.y + noise
+
 
         gem.updatePosition(dt)
         gem.updateChildrens(dt)
@@ -46,6 +55,7 @@ function newGem(pX,pY)
             gem.target.parent.addToScore(gem.amount)
             gem.collider.remove = true
             gem.remove = true
+            gem.shadow.remove = true
             gem.removeAnimation()
             notificationSound:stop()
             notificationSound:play()

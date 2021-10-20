@@ -1,18 +1,16 @@
 function newPauseMenu()   
     local menu = {}
 
-    menu.titleFont = love.graphics.newFont("Assets/Fonts/kenvector_future_thin.ttf", 28)
-    menu.btnFont = love.graphics.newFont("Assets/Fonts/kenvector_future_thin.ttf", 14)
 
     menu.panel = newPanel(200,-300,0,0)
     menu.panel.setImage(love.graphics.newImage("Assets/Images/HUD/Panel_400x300.png"))
 
     -- Setup title
-    menu.title = newLabel(0,40,400,40,"PAUSE",menu.titleFont)
+    menu.title = newLabel(0,40,400,40,"PAUSE",love.graphics.newFont("Assets/Fonts/kenvector_future_thin.ttf", 28))
     menu.panel.addChild(menu.title)
 
     -- Setup Resume button
-    menu.resumeBtn = newButton(100,125,100,15,"RESUME",menu.btnFont)
+    menu.resumeBtn = newButton(100,125,100,15,"RESUME",love.graphics.newFont("Assets/Fonts/kenvector_future_thin.ttf", 14))
     menu.resumeBtn.setEvent("pressed", function(pState)
         if pState == "end" then
             menu.onResumeBtnPressed()
@@ -27,7 +25,7 @@ function newPauseMenu()
 
 
     -- Setup main menu button
-    menu.mainMenuBtn = newButton(100,175,100,15,"MENU",menu.btnFont)
+    menu.mainMenuBtn = newButton(100,175,100,15,"MENU",love.graphics.newFont("Assets/Fonts/kenvector_future_thin.ttf", 14))
     menu.mainMenuBtn.setEvent("pressed", function(pState)
         if pState == "end" then
             menu.onMainMenuBtnPressed()

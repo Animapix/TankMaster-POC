@@ -60,14 +60,14 @@ function newTank(pX,pY,pBounds)
 
     tank.throttleCmd = 0
     tank.steeringCmd = 0
-
-    tank.life = 500
+    tank.maxLife = 500
+    tank.life = tank.maxLife
     tank.speed = 250
 
     tank.invincibleTimer = 0
     tank.invincibleDuration = 0.1
 
-    tank.score = 0
+    tank.scoring = nil
 
     tank.update = function(dt)
 
@@ -126,7 +126,9 @@ function newTank(pX,pY,pBounds)
     end
 
     tank.addToScore = function(amount)
-        tank.score = tank.score + amount
+        if tank.scoring ~= nil then
+            tank.scoring(amount)
+        end
     end
 
     tank.moveForward = function(dt)

@@ -32,6 +32,8 @@ local HUD
 local cursor
 local outArrowSprite
 local commandsSprite
+local bonusPanel
+local lifePackPriceLabel
 
 local music
 
@@ -48,6 +50,59 @@ scene.load = function()
     addNewSpritesLayer("bullets")
     addNewSpritesLayer("particles")
     addNewSpritesLayer("topWalls")
+
+
+    --Setup GUI
+    HUD = newHUD()
+    cursor = love.graphics.newImage("Assets/Images/HUD/Cursor.png")
+    bonusPanel = newControl(0,0)--200)
+    local lifePackButton = newButton(373, 100 ,0,0,"",love.graphics.newFont("Assets/Fonts/retro_computer_personal_use.ttf", 14))
+    lifePackButton.setEvent("pressed", function(pState)
+        if pState == "end" then
+            local price = 500 * level
+            if HUD.pointsLabel.score > price and tank.life < tank.maxLife then
+                HUD.pointsLabel.subScore(price)
+                
+                tank.life = tank.life + 20
+                if tank.life > tank.maxLife then
+                    tank.life = tank.maxLife
+                end
+            end
+        end
+    end )
+
+    lifePackButton.setImage(
+        love.graphics.newImage("Assets/Images/HUD/LifePackIcon.png"),
+        love.graphics.newImage("Assets/Images/HUD/LifePackIcon.png"),
+        love.graphics.newImage("Assets/Images/HUD/LifePackIcon.png")
+    )
+    bonusPanel.addChild(lifePackButton) 
+
+    lifePackPriceLabel = newLabel(300,130,200,50,"500$",love.graphics.newFont("Assets/Fonts/retro_computer_personal_use.ttf", 7))
+    bonusPanel.addChild(lifePackPriceLabel) 
+    
+    addControl(bonusPanel)
+
+    pauseMenu = newPauseMenu()
+    pauseMenu.onResumeBtnPressed = function()
+        sceneState = previousGameState
+        pauseMenu.hide()
+        love.mouse.setGrabbed(true)
+    end
+    pauseMenu.onMainMenuBtnPressed = function()
+        pauseMenu.hide()
+        scene.fadeOut("menu")
+        love.mouse.setGrabbed(false)
+    end
+
+    gameOverMenu = newGameOverMenu()
+    gameOverMenu.onMainMenuBtnPressed = function()
+        gameOverMenu.hide()
+        scene.fadeOut("menu")
+    end
+
+
+
 
     bounds = { x = 400, y = 225 , width = 740 , height = 390 }
     scene.canvasPosition = newVector()
@@ -75,28 +130,13 @@ scene.load = function()
 
     tank = newTank(bounds.x - bounds.width/2 - 100,bounds.y, bounds)
     tank.canOutOfBounds = true
+    tank.scoring = function(amount)
+        HUD.pointsLabel.addScore(amount)
+    end
+
     sceneState = "start"
 
-    --Setup GUI
-    HUD = newHUD()
-    cursor = love.graphics.newImage("Assets/Images/HUD/Cursor.png")
-    pauseMenu = newPauseMenu()
-    pauseMenu.onResumeBtnPressed = function()
-        sceneState = previousGameState
-        pauseMenu.hide()
-        love.mouse.setGrabbed(true)
-    end
-    pauseMenu.onMainMenuBtnPressed = function()
-        pauseMenu.hide()
-        scene.fadeOut("menu")
-        love.mouse.setGrabbed(true)
-    end
-
-    gameOverMenu = newGameOverMenu()
-    gameOverMenu.onMainMenuBtnPressed = function()
-        gameOverMenu.hide()
-        scene.fadeOut("menu")
-    end
+    
 
     level = 1
     waves = 5
@@ -109,7 +149,10 @@ scene.load = function()
 
     newTween(scene,"opacity",0,1,0.5,tweenTypes.sinusoidalOut)
     newTween(commandsSprite,"opacity",0.0,1.0,1,tweenTypes.quarticInOut,2.0)
+
     
+
+
 end
 
 scene.update = function(dt)
@@ -132,7 +175,7 @@ end
 
 scene.updateHUD = function(dt)
     HUD.lifeBar.value = tank.life
-    HUD.pointsLabel.setScore(tank.score)
+    --HUD.pointsLabel.setScore(tank.score)
 end
 
 scene.updateStart = function(dt)
@@ -162,6 +205,8 @@ scene.updateGame = function(dt)
         sceneState = "end"
         doors.right.open()
         newTween(outArrowSprite,"opacity",outArrowSprite.opacity,1.0,0.8,tweenTypes.quarticIn)
+        newTween(bonusPanel,"y",bonusPanel.y,0,0.5,tweenTypes.sinusoidalOut)
+        lifePackPriceLabel.setText((level * 500).."$")
     end
 
     if tank.life <= 0 then
@@ -180,8 +225,7 @@ scene.updateEnd = function(dt)
         sceneState = "goOut"
         tank.canOutOfBounds = true
         newTween(outArrowSprite,"opacity",outArrowSprite.opacity,0.0,0.8,tweenTypes.quarticOut)
-        --outArrowSprite.visible = false
-        
+        newTween(bonusPanel,"y",bonusPanel.y,-200,0.5,tweenTypes.sinusoidalIn)
         local gems = getSprites("gem")
         for __,gem in ipairs(gems) do
             gem.remove = true

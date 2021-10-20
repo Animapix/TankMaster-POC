@@ -5,7 +5,7 @@ local cursor
 local background
 
 scene.load = function()
-    
+    love.mouse.setGrabbed(false)
     local mainMenu = newMainMenu()
     mainMenu.onPlayBtnPressed = function()
         mainMenu.hide()

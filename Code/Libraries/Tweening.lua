@@ -69,6 +69,8 @@ function newTween(pTarget, pKey, pStartValue, pEndValue, pDuration, pType, pDela
     tween.onFinsish = nil
     tween.remove = false
 
+    setValue(tween.target, tween.targetKey, pStartValue)
+
     tween.update = function(dt)
         
         if tween.delay > 0 then
