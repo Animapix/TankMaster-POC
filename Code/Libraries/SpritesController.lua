@@ -96,6 +96,7 @@ newSpriteNode = function(pX, pY, pLayer)
     node.childrens = {}
     node.parent = nil
     node.remove = false
+    node.removeTimer = nil
     node.collider = nil
     node.opacity = 1
     node.visible = true
@@ -145,8 +146,18 @@ newSpriteNode = function(pX, pY, pLayer)
     end
 
     node.update = function(dt)
+        node.updateTimers(dt)
         node.updatePosition(dt)
         node.updateChildrens(dt)
+    end
+
+    node.updateTimers = function(dt)
+        if node.removeTimer ~= nil then
+            node.removeTimer = node.removeTimer - dt
+            if node.removeTimer <= 0 then
+                node.remove = true
+            end
+        end
     end
 
     node.updateChildrens = function(dt)
@@ -228,6 +239,7 @@ newSprite = function(pX, pY, pImage, pLayer)
     end
 
     sprite.update = function(dt)
+        sprite.updateTimers(dt)
         sprite.updatePosition(dt)
         sprite.updateAnimation(dt)
         sprite.updateChildrens(dt)
@@ -291,7 +303,7 @@ newParticlesEmitter = function(pX,pY,pImage,lifeTime, pLayer)
     emitter.particleGravityRandomF = 0
 
     emitter.update = function(dt)
-        
+        emitter.updateTimers(dt)
         for i= 1, emitter.particlesAmount * dt do
             local particle = newParticle(emitter.position.x,emitter.position.y,emitter.particleImage,emitter.layer)
             local angle = love.math.random() * emitter.angle + emitter.rotation - emitter.angle / 2
@@ -317,14 +329,14 @@ end
 
 newParticle = function(pX,pY, pImage ,pLayer)
     local particle = newSpriteNode(pX,pY,pLayer)
-
+    
     particle.life = 1
     particle.gravity = 0
     particle.size = 1
     particle.image = pImage
 
     particle.update = function(dt)
-
+        particle.updateTimers(dt)
         particle.life = particle.life - dt
         
         if particle.life <= 0 then

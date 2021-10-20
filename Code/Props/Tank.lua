@@ -3,6 +3,8 @@ require("Props.Bullet")
 local shotSound = love.audio.newSource("Assets/Sounds/Explosion_Fast.wav", "static") 
 local smallShotSound = love.audio.newSource("Assets/Sounds/Small_Gun_Shot.wav", "static") 
 local tracksSound = love.audio.newSource("Assets/Sounds/tracks.wav", "stream")
+local bigMuzleFlash = love.graphics.newImage("Assets/Images/Tank/BigMuzleFlash.png")
+local littleMuzleFlash = love.graphics.newImage("Assets/Images/Tank/LitleMuzleFlash.png")
 
 function newTank(pX,pY,pBounds)
     local tank = newSpriteNode(pX, pY, "tank")
@@ -53,6 +55,7 @@ function newTank(pX,pY,pBounds)
     tank.turret.barrelLeft = newSpriteNode(4,-11)
     tank.turret.barrelLeft.visible  = false
     tank.turret.addChild(tank.turret.barrelLeft)
+
 
     tank.rifleRate = 0.1
     tank.rifleTimer = 0
@@ -183,6 +186,11 @@ function newTank(pX,pY,pBounds)
             tank.bulletTimer = tank.bulletRate
             require("Libraries.Utils.Camera").startShake(0.1,100)
             statsExplosivesBulletFired()
+
+            local muzleFlash = newSprite(tank.turret.barrel.getRelativeX(),tank.turret.barrel.getRelativeY(),bigMuzleFlash, "particles")
+            muzleFlash.velocity = tank.velocity
+            muzleFlash.rotation = tank.turret.barrel.getRelativeRotation()
+            muzleFlash.removeTimer = 0.05
         end
     end
 
@@ -204,6 +212,16 @@ function newTank(pX,pY,pBounds)
             require("Libraries.Utils.Camera").startShake(0.1,10)
             statsRifleBulletFired()
             statsRifleBulletFired()
+
+            local muzleFlashLeft = newSprite(tank.turret.barrelLeft.getRelativeX(),tank.turret.barrelLeft.getRelativeY(),littleMuzleFlash, "particles")
+            muzleFlashLeft.velocity = tank.velocity
+            muzleFlashLeft.rotation = tank.turret.barrelLeft.getRelativeRotation()
+            muzleFlashLeft.removeTimer = 0.02
+
+            local muzleFlashRight = newSprite(tank.turret.barrelRight.getRelativeX(),tank.turret.barrelRight.getRelativeY(),littleMuzleFlash, "particles")
+            muzleFlashLeft.velocity = tank.velocity
+            muzleFlashRight.rotation = tank.turret.barrelRight.getRelativeRotation()
+            muzleFlashRight.removeTimer = 0.02
         end
     end
 
