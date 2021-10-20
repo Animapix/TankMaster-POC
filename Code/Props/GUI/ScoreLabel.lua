@@ -33,5 +33,14 @@ function newScoreLabel(pX,pY)
         return str
     end
 
+
+    scoreLabel.draw = function()
+        if scoreLabel.visible == false then return end
+        love.graphics.setColor(0.7,0.9,1)
+        scoreLabel.drawPanel()   
+        scoreLabel.drawChildrens()
+        love.graphics.setColor(1,1,1)
+    end
+
     return scoreLabel
 end
